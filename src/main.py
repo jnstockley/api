@@ -1,20 +1,18 @@
+import os
 from typing import Annotated
-
-import toml
 from fastapi import FastAPI, Header, HTTPException
 
-import docker
+from util import docker
 
 app = FastAPI()
 
-
-config = toml.load("config/application.toml")
-
-api_key = config['API']['api_key']
+api_key = os.environ['api_key']
 
 
 @app.get("/docker/")
 def get_latest_docker_version(docker_image: str = "", x_api_key: Annotated[str | None, Header()] = None):
+    if api_key is None or api_key == ''.strip():
+        raise HTTPException(status_code=500, detail="API Key not set")
     if x_api_key != api_key:
         raise HTTPException(status_code=401, detail="Unauthorized")
     image = docker_image.split(":")[0]

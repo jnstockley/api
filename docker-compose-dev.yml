@@ -1,0 +1,23 @@
+version: '3'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    develop:
+      watch:
+        - action: rebuild
+          path: Dockerfile
+        - action: rebuild
+          path: src/
+        - action: rebuild
+          path: pyproject.toml
+        - action: rebuild
+          path: poetry.lock
+    image: jstockley/api:latest
+    working_dir: /opt/jstockley-api
+    env_file:
+      - .env
+    ports:
+      - "5001:5000"
+    restart: always

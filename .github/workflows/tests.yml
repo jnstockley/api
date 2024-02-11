@@ -33,4 +33,6 @@ jobs:
           touch .env
           echo "api_key='${{ secrets.API_KEY }}'" >> .env
       - name: Step 5 - Run Tests
-        run: poetry run pytest test
+        run: |
+          export PYTHONPATH=src:$PYTHONPATH
+          poetry run pytest test

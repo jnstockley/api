@@ -52,7 +52,7 @@ jobs:
   push_to_registries:
     needs:
       - lint
-      - test
+      - tests
     name: Push Docker image to multiple registries
     runs-on: ubuntu-latest
     permissions:

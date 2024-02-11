@@ -35,6 +35,8 @@ jobs:
           poetry run isort test/ --check
 
   tests:
+    needs:
+      - lint
     name: Python Tests
     runs-on: ubuntu-latest
 

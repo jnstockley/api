@@ -27,6 +27,8 @@ jobs:
           poetry run isort test/ --check
 
   tests:
+    needs:
+      - lint
     name: Python Tests
     runs-on: ubuntu-latest
 
@@ -48,6 +50,9 @@ jobs:
           poetry run pytest test
 
   push_to_registries:
+    needs:
+      - lint
+      - test
     name: Push Docker image to multiple registries
     runs-on: ubuntu-latest
     permissions:

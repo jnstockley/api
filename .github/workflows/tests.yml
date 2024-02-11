@@ -28,11 +28,8 @@ jobs:
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           poetry install --no-root
-      - name: Step 4 - Create .env file
+      - name: Step 4 - Run Tests
         run: |
-          touch .env
-          echo "api_key='${{ secrets.API_KEY }}'" >> .env
-      - name: Step 5 - Run Tests
-        run: |
+          export api_key=${{ secrets.API_KEY }}
           export PYTHONPATH=src:$PYTHONPATH
           poetry run pytest test

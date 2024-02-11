@@ -11,9 +11,10 @@ fastapi = "^0.109.2"
 uvicorn = {extras = ["standard"], version = "^0.27.0.post1"}
 httpx = "^0.26.0"
 
+[tool.poetry.group.test]
+optional = true
 
 [tool.poetry.group.test.dependencies]
-optional = true
 pytest = "^8.0.0"
 
 [build-system]

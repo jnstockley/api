@@ -7,12 +7,14 @@ images = ["adguard/adguardhome", "louislam/dockge", "jc21/nginx-proxy-manager",
 
 
 def get_latest_docker_image(image: str) -> str | None:
-    docker_images = {}
     version_regex = re.compile(r"\w?(\d*\.+\d*)+")
     url = "https://hub.docker.com/v2/namespaces/{namespace}/repositories/{repository}/tags"
-
-    namespace = image.split("/")[0]
-    repository = image.split("/")[1]
+    if '/' in image:
+        namespace = image.split("/")[0]
+        repository = image.split("/")[1]
+    else:
+        namespace = 'library'
+        repository = image
     formatted_url = url.format(namespace=namespace, repository=repository)
     latest_response = httpx.get(f"{formatted_url}/latest")
     digest = ''
@@ -25,7 +27,3 @@ def get_latest_docker_image(image: str) -> str | None:
                 if docker_image['name'] != 'latest' and re.fullmatch(version_regex, docker_image['name']):
                     return docker_image['name']
     return None
-
-
-if __name__ == '__main__':
-    print(get_latest_docker_image())

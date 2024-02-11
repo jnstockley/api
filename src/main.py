@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from controllers import health_check, docker
+from controllers import docker, health_check
 
 app = FastAPI()
 

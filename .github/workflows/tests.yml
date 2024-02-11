@@ -13,6 +13,27 @@ on:
       - pyproject.toml
 
 jobs:
+  lint:
+    name: Python Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Step 1 - Checkout
+        uses: actions/checkout@v4
+      - name: Step 2 - Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Step 3 - Install Poetry and Dependencies
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          poetry install --no-root --with test
+      - name: Step 4 - Lint
+        run: |
+          poetry run black src/ --check
+          poetry run black test/ --check
+          poetry run isort src/ --check
+          poetry run isort test/ --check
+
   tests:
     name: Python Tests
     runs-on: ubuntu-latest

@@ -27,7 +27,7 @@ jobs:
       - name: Step 3 - Install Poetry and Dependencies
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
-          poetry install --no-root
+          poetry install --no-root --with test
       - name: Step 4 - Run Tests
         run: |
           export api_key=${{ secrets.API_KEY }}

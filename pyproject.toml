@@ -13,6 +13,7 @@ httpx = "^0.26.0"
 
 
 [tool.poetry.group.test.dependencies]
+optional = true
 pytest = "^8.0.0"
 
 [build-system]

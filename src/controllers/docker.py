@@ -1,10 +1,7 @@
 from fastapi import APIRouter, HTTPException, Security
-from fastapi.security import OAuth2PasswordBearer
 
 from util import docker
 from util.auth import get_token_header
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 router = APIRouter(prefix="/docker", dependencies=[Security(get_token_header)])
 

@@ -7,7 +7,7 @@ router = APIRouter(prefix="/docker", dependencies=[Security(get_token_header)])
 
 
 @router.get("/")
-async def get_latest_docker_version(docker_image: str = ""):
+async def get_latest_docker_version(docker_image: str):
     if docker_image.strip() == "":
         raise HTTPException(
             status_code=422, detail="Missing docker_image query parameter"

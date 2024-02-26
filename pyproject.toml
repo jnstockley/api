@@ -17,7 +17,7 @@ toml = "^0.10.2"
 optional = true
 
 [tool.poetry.group.test.dependencies]
-pytest = "^8.0.0"
+pytest = "^8.0.2"
 black = "^24.2.0"
 isort = "^5.13.2"
 

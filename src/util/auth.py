@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi import Header, HTTPException
 
 
-async def get_token_header(x_api_key: Annotated[str | None, Header()]):
+async def get_token_header(x_api_key: Annotated[str, Header()]):
     api_key = os.environ["api_key"]
     if api_key is None or api_key.strip() == "":
         raise HTTPException(status_code=500, detail="API Key not set")

@@ -1,3 +1,5 @@
+from unittest import TestCase
+
 from fastapi.testclient import TestClient
 
 from src.main import app
@@ -5,7 +7,9 @@ from src.main import app
 client = TestClient(app)
 
 
-def test_health_check():
-    response = client.get("/health-check")
-    assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+class TestHealthCheck(TestCase):
+
+    def test_health_check(self):
+        response = client.get("/health-check")
+        assert response.status_code == 200
+        assert response.json() == {"status": "ok"}

@@ -33,11 +33,14 @@ class TestDocker(TestCase):
             },
         ]
 
-    def test_docker_empty_api_key(self):
-        header = {"X-API-KEY": ""}
+    def test_docker_api_key_not_set(self):
+        temp = os.environ["api_key"]
+        os.environ["api_key"] = ""
+        header = {"X-API-KEY": "hello-world-123"}
         response = client.get("/docker", headers=header)
-        assert response.status_code == 401
-        assert response.json() == {"detail": "Unauthorized"}
+        assert response.status_code == 500
+        assert response.json() == {"detail": "API Key not set"}
+        os.environ["api_key"] = temp
 
     def test_docker_invalid_api_key_and_no_param(self):
         header = {"X-API-KEY": "hello-world-123"}

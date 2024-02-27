@@ -33,6 +33,12 @@ class TestDocker(TestCase):
             },
         ]
 
+    def test_docker_empty_api_key(self):
+        header = {"X-API-KEY": ""}
+        response = client.get("/docker", headers=header)
+        assert response.status_code == 401
+        assert response.json() == {"detail": "Unauthorized"}
+
     def test_docker_invalid_api_key_and_no_param(self):
         header = {"X-API-KEY": "hello-world-123"}
         response = client.get("/docker", headers=header)
@@ -55,6 +61,15 @@ class TestDocker(TestCase):
                 }
             ]
         }
+
+    def test_docker_valid_api_key_empty_param(self):
+        docker_image = ""
+        api_key = os.environ["api_key"]
+        header = {"X-API-KEY": api_key}
+        param = {"docker_image": docker_image}
+        response = client.get("/docker", headers=header, params=param)
+        assert response.status_code == 422
+        assert response.json() == {"detail": "Missing docker_image query parameter"}
 
     def test_docker_valid_api_key_invalid_param(self):
         docker_image = "api"

@@ -2,7 +2,7 @@ version: '3.6'
 services:
   api:
     container_name: "jnstockley-api"
-    image: jnstockley/api:v0.0.3
+    image: jnstockley/api:v0.0.4
     working_dir: /opt/jstockley-api
     env_file:
       - .env

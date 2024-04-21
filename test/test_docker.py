@@ -11,27 +11,26 @@ client = TestClient(app)
 class TestDocker(TestCase):
 
     def test_docker_no_auth(self):
-        response = client.get("/docker")
-        assert response.status_code == 422
-        res_json = response.json()
-        assert "detail" in res_json
-        details = res_json["detail"]
-        assert details == [
+        mock_response = [
             {
                 "type": "missing",
                 "loc": ["header", "x-api-key"],
                 "msg": "Field required",
                 "input": None,
-                "url": "https://errors.pydantic.dev/2.6/v/missing",
             },
             {
                 "type": "missing",
                 "loc": ["query", "docker_image"],
                 "msg": "Field required",
                 "input": None,
-                "url": "https://errors.pydantic.dev/2.6/v/missing",
             },
         ]
+        response = client.get("/docker")
+        assert response.status_code == 422
+        res_json = response.json()
+        assert "detail" in res_json
+        details = res_json["detail"]
+        assert details == mock_response
 
     def test_docker_api_key_not_set(self):
         temp = os.environ["api_key"]
@@ -51,19 +50,19 @@ class TestDocker(TestCase):
     def test_docker_valid_api_key_and_no_param(self):
         api_key = os.environ["api_key"]
         header = {"X-API-KEY": api_key}
-        response = client.get("/docker", headers=header)
-        assert response.status_code == 422
-        assert response.json() == {
+        mock_response = {
             "detail": [
                 {
                     "type": "missing",
                     "loc": ["query", "docker_image"],
                     "msg": "Field required",
                     "input": None,
-                    "url": "https://errors.pydantic.dev/2.6/v/missing",
                 }
             ]
         }
+        response = client.get("/docker", headers=header)
+        assert response.status_code == 422
+        assert response.json() == mock_response
 
     def test_docker_valid_api_key_empty_param(self):
         docker_image = ""

@@ -1,4 +1,4 @@
-FROM python:3.12-alpine3.19
+FROM python:3.12.3-alpine3.19
 
 RUN apk update
 
@@ -18,7 +18,7 @@ COPY poetry.lock /opt/jstockley-api
 
 WORKDIR /opt/jstockley-api
 
-RUN poetry install
+RUN poetry install --without=test
 
 COPY src/ /opt/jstockley-api
 

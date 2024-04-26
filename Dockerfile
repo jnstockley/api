@@ -1,6 +1,6 @@
 FROM python:3.12.3-alpine3.19
 
-RUN apk add alpine-sdk python3-dev libressl-dev musl-dev libffi-dev gcc openssl-dev
+RUN apk add alpine-sdk python3-dev libressl-dev musl-dev libffi-dev gcc libressl-dev
 
 ENV PATH="/root/.local/bin:$PATH"
 

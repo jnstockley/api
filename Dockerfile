@@ -1,6 +1,6 @@
 FROM python:3.12.3-alpine3.19
 
-RUN apk add alpine-sdk libffi-dev
+RUN apk add alpine-sdk libffi-dev python3-dev
 
 ENV PATH="/root/.local/bin:$PATH"
 

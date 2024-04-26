@@ -1,6 +1,6 @@
 FROM python:3.12.3-alpine3.19
 
-RUN apk add alpine-sdk libffi-dev python3-dev
+RUN apk add alpine-sdk python3-dev libressl-dev musl-dev libffi-dev
 
 ENV PATH="/root/.local/bin:$PATH"
 
@@ -16,7 +16,7 @@ COPY poetry.lock /opt/jstockley-api
 
 WORKDIR /opt/jstockley-api
 
-RUN poetry install --without=test
+RUN poetry install --without=test --no-root
 
 COPY src/ /opt/jstockley-api
 

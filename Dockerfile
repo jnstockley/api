@@ -1,14 +1,12 @@
 FROM python:3.12.3-alpine3.19
 
-RUN apk update
-
-RUN apk upgrade
-
 RUN apk add alpine-sdk libffi-dev
 
-RUN curl -sSL https://install.python-poetry.org | python3 -
-
 ENV PATH="/root/.local/bin:$PATH"
+
+RUN python3 -m pip install --user pipx
+
+RUN pipx install poetry
 
 RUN mkdir /opt/jstockley-api
 

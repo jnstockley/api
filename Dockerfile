@@ -1,5 +1,9 @@
 FROM python:3.12.3-alpine3.19
 
+RUN apk update
+
+RUN apk upgrade
+
 RUN apk add alpine-sdk python3-dev libressl-dev musl-dev libffi-dev gcc libressl-dev
 
 ENV PATH="/root/.local/bin:$PATH"
@@ -20,7 +24,7 @@ RUN poetry install --without=test --no-root
 
 COPY src/ /opt/jstockley-api
 
-RUN apk del alpine-sdk python3-dev libressl-dev musl-dev libffi-dev gcc openssl-dev
+# RUN apk del alpine-sdk python3-dev libressl-dev musl-dev libffi-dev gcc openssl-dev
 
 EXPOSE 5000
 

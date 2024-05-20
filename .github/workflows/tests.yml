@@ -57,7 +57,7 @@ jobs:
           export PYTHONPATH=src:$PYTHONPATH
           poetry run pytest --cov=./ --cov-report=xml test
       - name: Step 5 - Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4.4.0
+        uses: codecov/codecov-action@v4.4.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true

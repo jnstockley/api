@@ -10,7 +10,7 @@ RUN addgroup -S api && adduser -S api -G api
 
 USER api
 
-ENV PATH="/root/.local/bin:$PATH"
+ENV PATH="/home/api/.local/bin:$PATH"
 
 RUN pip install --upgrade pip
 

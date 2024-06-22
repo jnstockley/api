@@ -6,7 +6,7 @@ RUN apk upgrade
 
 RUN apk add alpine-sdk python3-dev libressl-dev musl-dev libffi-dev gcc libressl-dev curl
 
-RUN adduser -g api api && adduser api wheel
+RUN adduser -g "api" api && adduser api wheel
 
 USER api
 

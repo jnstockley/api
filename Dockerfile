@@ -4,7 +4,7 @@ RUN apk update
 
 RUN apk upgrade
 
-RUN apk add alpine-sdk python3-dev libressl-dev musl-dev libffi-dev gcc libressl-dev
+RUN apk add alpine-sdk python3-dev libressl-dev musl-dev libffi-dev gcc libressl-dev curl
 
 ENV PATH="/root/.local/bin:$PATH"
 

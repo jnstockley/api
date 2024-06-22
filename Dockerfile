@@ -18,13 +18,13 @@ RUN python3 -m pip install --user pipx
 
 RUN pipx install poetry
 
-RUN mkdir ~/jstockley-api
+RUN mkdir /home/api/jstockley-api
 
-COPY pyproject.toml ~/jstockley-api
+COPY pyproject.toml /home/api/jstockley-api
 
-COPY poetry.lock ~/jstockley-api
+COPY poetry.lock /home/api/jstockley-api
 
-WORKDIR ~/jstockley-api
+WORKDIR /home/api/jstockley-api
 
 RUN poetry install --without=test --no-root
 
@@ -34,7 +34,7 @@ RUN apk del alpine-sdk python3-dev libressl-dev musl-dev libffi-dev gcc libressl
 
 USER api
 
-COPY src/ ~/jstockley-api
+COPY src/ /home/api/jstockley-api
 
 EXPOSE 5000
 

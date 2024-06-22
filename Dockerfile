@@ -6,6 +6,10 @@ RUN apk upgrade
 
 RUN apk add alpine-sdk python3-dev libressl-dev musl-dev libffi-dev gcc libressl-dev curl
 
+RUN useradd -ms /bin/bash api
+
+USER api
+
 ENV PATH="/root/.local/bin:$PATH"
 
 RUN pip install --upgrade pip
@@ -24,7 +28,11 @@ WORKDIR /opt/jstockley-api
 
 RUN poetry install --without=test --no-root
 
+USER root
+
 RUN apk del alpine-sdk python3-dev libressl-dev musl-dev libffi-dev gcc libressl-dev
+
+USER api
 
 COPY src/ /opt/jstockley-api
 

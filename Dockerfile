@@ -1,40 +1,22 @@
-FROM python:3.12.6-alpine3.20
-
-RUN apk update
-
-RUN apk upgrade
-
-RUN apk add alpine-sdk python3-dev libressl-dev musl-dev libffi-dev gcc libressl-dev curl
-
-RUN addgroup -S api && adduser -S api -G api
-
-USER api
-
-ENV PATH="/home/api/.local/bin:$PATH"
-
-RUN python3 -m pip install --upgrade pip
-
-RUN python3 -m pip install --user pipx
-
-RUN pipx install poetry
-
-RUN mkdir /home/api/jnstockley-api
-
-COPY pyproject.toml /home/api/jnstockley-api
-
-COPY poetry.lock /home/api/jnstockley-api
-
-WORKDIR /home/api/jnstockley-api
-
-RUN poetry install --without=test --no-root
+FROM jnstockley/poetry:1.8.3-python3.12.6
 
 USER root
 
-RUN apk del alpine-sdk python3-dev libressl-dev musl-dev libffi-dev gcc libressl-dev
+RUN mkdir /api
 
-USER api
+RUN chown -R python3:python3 /api
 
-COPY src/ /home/api/jnstockley-api
+USER python3
+
+COPY pyproject.toml /api
+
+COPY poetry.lock /api
+
+WORKDIR /api
+
+RUN poetry install --without=test --no-root
+
+COPY src/ /api
 
 EXPOSE 5000
 

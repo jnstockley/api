@@ -3,6 +3,16 @@ name: Publish Docker image
 on:
   release:
     types: [published]
+  pull_request:
+  push:
+    branches:
+      - main
+    paths:
+      - src/**
+      - test/**
+      # - .github/workflows/**
+      - poetry.lock
+      - pyproject.toml
 
 jobs:
   lint:
@@ -91,10 +101,21 @@ jobs:
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v6
+        if: github.event.release.published == true
         with:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Build and push Docker images
+        if: github.event.release.published == false
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: jnstockley/api:testing
           labels: ${{ steps.meta.outputs.labels }}
 

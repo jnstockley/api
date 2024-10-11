@@ -93,29 +93,24 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
+        if: github.ref != 'refs/heads/dev'
         uses: docker/metadata-action@v5
         with:
           images: |
             jnstockley/api
             ghcr.io/${{ github.repository }}
 
-      - name: Build and push Docker images
-        uses: docker/build-push-action@v6
-        if: github.event.release.published == true
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+      - name: Extract metadata for dev branch
+        id: meta_dev
+        if: github.ref == 'refs/heads/dev'
+        run: echo "::set-output name=tags::jnstockley/api:testing"
 
       - name: Build and push Docker images
-        if: github.event.release.published == false
         uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: jnstockley/api:testing
+          tags: ${{ steps.meta.outputs.tags || steps.meta_dev.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 

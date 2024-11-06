@@ -6,7 +6,7 @@ RUN mkdir /api
 
 RUN chown -R python3:python3 /api
 
-RUN apt-get install -y build-essential
+RUN apk add alpine-sdk
 
 USER python3
 
@@ -22,7 +22,7 @@ COPY src/ /api
 
 USER root
 
-RUN apt-get purge -y build-essential
+RUN apk del alpine-sdk
 
 USER python3
 

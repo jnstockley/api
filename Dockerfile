@@ -6,6 +6,8 @@ RUN mkdir /api
 
 RUN chown -R python3:python3 /api
 
+RUN apt-get install -y build-essential
+
 USER python3
 
 COPY pyproject.toml /api
@@ -17,6 +19,12 @@ WORKDIR /api
 RUN poetry install --without=test --no-root
 
 COPY src/ /api
+
+USER root
+
+RUN apt-get purge -y build-essential
+
+USER python3
 
 EXPOSE 5000
 

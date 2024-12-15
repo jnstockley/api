@@ -106,7 +106,7 @@ jobs:
 
       - name: Extract metadata for main branch
         id: meta_main
-        if: github.ref == 'refs/heads/main'
+        if: github.base_ref == 'main'
         run: |
           echo "::set-output name=tags::jnstockley/api:testing,jnstockley/api:testing-$(date +'%Y%m%d%H%M%S')"
 

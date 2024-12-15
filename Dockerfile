@@ -1,6 +1,9 @@
 FROM jnstockley/poetry:1.8.5-python3.13.1 AS build
 
-RUN apk add cargo && mkdir /api
+RUN apk update && \
+    apk upgrade && \
+    apk add alpine-sdk python3-dev musl-dev libffi-dev gcc curl openssl-dev cargo pkgconfig && \
+    mkdir /api
 
 COPY pyproject.toml /api
 

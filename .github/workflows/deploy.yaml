@@ -8,9 +8,8 @@ on:
     branches:
       - main
     paths:
+      - Dockerfile
       - src/**
-      - test/**
-      # - .github/workflows/**
       - poetry.lock
       - pyproject.toml
 
@@ -24,7 +23,8 @@ jobs:
       - name: Step 2 - Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.x'
+          check-latest: true
       - name: Step 3 - Install Poetry and Dependencies
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
@@ -48,7 +48,8 @@ jobs:
       - name: Step 2 - Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.x'
+          check-latest: true
       - name: Step 3 - Install Poetry and Dependencies
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
@@ -60,6 +61,7 @@ jobs:
           poetry run pytest test
 
   push_to_registries:
+    if: github.event_name == 'release' || github.base_ref == 'main'
     needs:
       - lint
       - tests
@@ -93,17 +95,21 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        if: github.ref != 'refs/heads/dev'
+        if: github.event_name == 'release'
         uses: docker/metadata-action@v5
         with:
           images: |
             jnstockley/api
             ghcr.io/${{ github.repository }}
+          tags: |
+            latest
+            ${{ github.event.release.tag_name }}
 
-      - name: Extract metadata for dev branch
-        id: meta_dev
-        if: github.ref == 'refs/heads/dev'
-        run: echo "::set-output name=tags::jnstockley/api:testing"
+      - name: Extract metadata for main branch
+        id: meta_main
+        if: github.base_ref == 'main'
+        run: |
+          echo "::set-output name=tags::jnstockley/api:testing,jnstockley/api:testing-$(date +'%Y%m%d%H%M%S')"
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v6
@@ -111,6 +117,6 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.meta.outputs.tags || steps.meta_dev.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags || steps.meta_main.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 

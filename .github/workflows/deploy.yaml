@@ -61,6 +61,7 @@ jobs:
           poetry run pytest test
 
   push_to_registries:
+    if: github.event_name == 'release' || github.base_ref == 'main'
     needs:
       - lint
       - tests

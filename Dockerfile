@@ -1,6 +1,6 @@
-FROM jnstockley/poetry:1.8.5
+FROM jnstockley/poetry:1.8.5-python3.13.1 AS build
 
-RUN mkdir /api
+RUN apk add cargo && mkdir /api
 
 COPY pyproject.toml /api
 
@@ -11,6 +11,15 @@ WORKDIR /api
 RUN poetry install --without=test --no-root
 
 COPY src/ /api
+
+
+FROM jnstockley/poetry:1.8.5-python3.13.1
+
+COPY --from=build /root/.cache/pypoetry/virtualenvs  /root/.cache/pypoetry/virtualenvs
+
+COPY --from=build /api /api
+
+WORKDIR /api
 
 EXPOSE 5000
 

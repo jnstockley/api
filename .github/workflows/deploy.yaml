@@ -100,7 +100,7 @@ jobs:
         with:
           images: |
             jnstockley/api
-            ghcr.io/${{ github.repository }}
+            ghcr.io/jnstockley/api
           tags: |
             latest
             ${{ github.event.release.tag_name }}
@@ -109,7 +109,7 @@ jobs:
         id: meta_main
         if: github.base_ref == 'main'
         run: |
-          echo "tags=jnstockley/api:testing,jnstockley/api:testing-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+          echo "tags=jnstockley/api:testing,jnstockley/api:testing-$(date +'%Y%m%d%H%M%S'),ghcr.io/jnstockley/api:testing,ghcr.io/jnstockley/api:testing-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v6

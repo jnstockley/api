@@ -1,4 +1,3 @@
-version: '3'
 services:
   api:
     container_name: jstockley_api_dev
@@ -16,7 +15,6 @@ services:
         - action: rebuild
           path: poetry.lock
     image: jstockley/api:latest
-    working_dir: /opt/jstockley-api
     env_file:
       - .env
     ports:

@@ -1,12 +1,6 @@
 FROM jnstockley/poetry:1.8.5
 
-USER root
-
 RUN mkdir /api
-
-RUN chown -R python3:python3 /api
-
-USER python3
 
 COPY pyproject.toml /api
 
@@ -17,10 +11,6 @@ WORKDIR /api
 RUN poetry install --without=test --no-root
 
 COPY src/ /api
-
-USER root
-
-USER python3
 
 EXPOSE 5000
 

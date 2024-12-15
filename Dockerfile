@@ -18,7 +18,7 @@ COPY src/ /api
 
 FROM jnstockley/poetry:1.8.5-python3.13.1
 
-RUN apk add cur
+RUN apk add curl
 
 COPY --from=build /root/.cache/pypoetry/virtualenvs  /root/.cache/pypoetry/virtualenvs
 

@@ -117,6 +117,6 @@ jobs:
           context: .
           platforms: linux/386,linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.meta.outputs.tags || steps.meta_main.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags || env.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 

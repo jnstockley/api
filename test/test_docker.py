@@ -33,13 +33,13 @@ class TestDocker(TestCase):
         assert details == mock_response
 
     def test_docker_api_key_not_set(self):
-        temp = os.environ["api_key"]
-        os.environ["api_key"] = ""
+        temp = os.environ["API_KEY"]
+        os.environ["API_KEY"] = ""
         header = {"X-API-KEY": "hello-world-123"}
         response = client.get("/docker", headers=header)
         assert response.status_code == 500
         assert response.json() == {"detail": "API Key not set"}
-        os.environ["api_key"] = temp
+        os.environ["API_KEY"] = temp
 
     def test_docker_invalid_api_key_and_no_param(self):
         header = {"X-API-KEY": "hello-world-123"}
@@ -48,7 +48,7 @@ class TestDocker(TestCase):
         assert response.json() == {"detail": "Unauthorized"}
 
     def test_docker_valid_api_key_and_no_param(self):
-        api_key = os.environ["api_key"]
+        api_key = os.environ["API_KEY"]
         header = {"X-API-KEY": api_key}
         mock_response = {
             "detail": [
@@ -66,7 +66,7 @@ class TestDocker(TestCase):
 
     def test_docker_valid_api_key_empty_param(self):
         docker_image = ""
-        api_key = os.environ["api_key"]
+        api_key = os.environ["API_KEY"]
         header = {"X-API-KEY": api_key}
         param = {"docker_image": docker_image}
         response = client.get("/docker", headers=header, params=param)
@@ -75,7 +75,7 @@ class TestDocker(TestCase):
 
     def test_docker_valid_api_key_invalid_param(self):
         docker_image = "api"
-        api_key = os.environ["api_key"]
+        api_key = os.environ["API_KEY"]
         header = {"X-API-KEY": api_key}
         param = {"docker_image": docker_image}
         response = client.get("/docker", headers=header, params=param)
@@ -84,7 +84,7 @@ class TestDocker(TestCase):
 
     def test_docker_valid_api_key_valid_param(self):
         docker_image = "adguard/adguardhome:v0.107.43"
-        api_key = os.environ["api_key"]
+        api_key = os.environ["API_KEY"]
         header = {"X-API-KEY": api_key}
         param = {"docker_image": docker_image}
         response = client.get("/docker", headers=header, params=param)

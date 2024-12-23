@@ -173,3 +173,5 @@ docker/racknerd/nginx-proxy-manager/letsencrypt
 docker/racknerd/uptime-kuma/uptime-kuma-data
 
 docker/racknerd/vaultwarden/vw-data
+
+postgres/

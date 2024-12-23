@@ -4,6 +4,7 @@ from fastapi import FastAPI
 import models
 from controllers import docker, health_check, ip
 from database import engine
+
 version = toml.load("pyproject.toml")["tool"]["poetry"]["version"]
 
 app = FastAPI(

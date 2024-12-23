@@ -2,9 +2,9 @@ import datetime
 import os
 import re
 
+import pytz
 from fastapi import APIRouter, HTTPException, Security
 from sqlalchemy.exc import NoResultFound
-import pytz
 from sqlalchemy.orm import session
 from starlette.requests import Request
 
@@ -15,10 +15,12 @@ from util.auth import get_token_header
 
 router = APIRouter(prefix="/ip", dependencies=[Security(get_token_header)])
 
-ipv4_pattern = re.compile(r"^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!172\.(16|17|18|19|20|21|22|23|24|25|26"
-                          r"|27|28|29|30|31))(?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])"
-                          r"(?<!192\.168)(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))\.([0-9]|[1-9][0-9]"
-                          r"|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$")
+ipv4_pattern = re.compile(
+    r"^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!172\.(16|17|18|19|20|21|22|23|24|25|26"
+    r"|27|28|29|30|31))(?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])"
+    r"(?<!192\.168)(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))\.([0-9]|[1-9][0-9]"
+    r"|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
+)
 
 
 @router.post("/")
@@ -28,15 +30,12 @@ async def add_ip(identifier: str, ip: str, db: db_dependency):
             status_code=422, detail="Missing identifier query parameter"
         )
     if ip.strip() == "":
-        raise HTTPException(
-            status_code=422, detail="Missing ip query parameter"
-        )
+        raise HTTPException(status_code=422, detail="Missing ip query parameter")
     if not ipv4_pattern.match(ip):
-        raise HTTPException(
-            status_code=422, detail="Invalid IP address format"
-        )
+        raise HTTPException(status_code=422, detail="Invalid IP address format")
 
     return insert_or_update_ip(identifier, ip, db)
+
 
 @router.post("/auto")
 async def auto_add_ip(identifier: str, db: db_dependency, request: Request):
@@ -53,6 +52,7 @@ async def auto_add_ip(identifier: str, db: db_dependency, request: Request):
 @router.get("/")
 async def get_all_ips(db: db_dependency):
     return db.query(models.IpAddress).all()
+
 
 @router.get("/{identifier}")
 async def get_ip(identifier: str, db: db_dependency):

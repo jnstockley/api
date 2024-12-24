@@ -3,10 +3,9 @@ import os
 import re
 
 import pytz
-from fastapi import APIRouter, HTTPException, Security
+from fastapi import APIRouter, HTTPException, Security, Request
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import session
-from starlette.requests import Request
 
 import database
 import models

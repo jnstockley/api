@@ -1,7 +1,9 @@
 import toml
 from fastapi import FastAPI
 
-from controllers import docker, health_check
+import models
+from controllers import docker, health_check, ip
+from database import engine
 
 version = toml.load("pyproject.toml")["tool"]["poetry"]["version"]
 
@@ -14,5 +16,8 @@ app = FastAPI(
     license_info={"name": "MIT License", "url": "https://mit-license.org"},
 )
 
+models.Base.metadata.create_all(bind=engine)
+
 app.include_router(health_check.router)
 app.include_router(docker.router)
+app.include_router(ip.router)

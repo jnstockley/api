@@ -43,9 +43,10 @@ async def auto_add_ip(identifier: str, db: db_dependency, request: Request):
             status_code=422, detail="Missing identifier query parameter"
         )
 
-    print(request.headers)
-
-    ip = request.client.host
+    if 'cf-connecting-ip' in request.headers:
+        ip = request.headers.get("cf-connecting-ip")
+    else:
+        ip = request.client.host
 
     return insert_or_update_ip(identifier, ip, db)
 

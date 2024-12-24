@@ -1,6 +1,7 @@
 import datetime
 import os
 import re
+from typing import Optional
 
 import pytz
 from fastapi import APIRouter, HTTPException, Request, Security
@@ -23,33 +24,20 @@ ipv4_pattern = re.compile(
 
 
 @router.post("/")
-async def add_ip(identifier: str, ip: str, db: db_dependency):
+async def add_ip(identifier: str, db: db_dependency, request: Request, ip: Optional[str] = None):
     if identifier.strip() == "":
         raise HTTPException(
             status_code=422, detail="Missing identifier query parameter"
         )
-    if ip.strip() == "":
-        raise HTTPException(status_code=422, detail="Missing ip query parameter")
+    if ip is None:
+        if "cf-connecting-ip" in request.headers:
+            ip = request.headers.get("cf-connecting-ip")
+        else:
+            ip = request.client.host
     if not ipv4_pattern.match(ip):
         raise HTTPException(status_code=422, detail="Invalid IP address format")
 
     return insert_or_update_ip(identifier, ip, db)
-
-
-@router.post("/auto")
-async def auto_add_ip(identifier: str, db: db_dependency, request: Request):
-    if identifier.strip() == "":
-        raise HTTPException(
-            status_code=422, detail="Missing identifier query parameter"
-        )
-
-    if "cf-connecting-ip" in request.headers:
-        ip = request.headers.get("cf-connecting-ip")
-    else:
-        ip = request.client.host
-
-    return insert_or_update_ip(identifier, ip, db)
-
 
 @router.get("/")
 async def get_all_ips(db: db_dependency):

@@ -24,7 +24,9 @@ ipv4_pattern = re.compile(
 
 
 @router.post("/")
-async def add_ip(identifier: str, db: db_dependency, request: Request, ip: Optional[str] = None):
+async def add_ip(
+    identifier: str, db: db_dependency, request: Request, ip: Optional[str] = None
+):
     if identifier.strip() == "":
         raise HTTPException(
             status_code=422, detail="Missing identifier query parameter"
@@ -38,6 +40,7 @@ async def add_ip(identifier: str, db: db_dependency, request: Request, ip: Optio
         raise HTTPException(status_code=422, detail="Invalid IP address format")
 
     return insert_or_update_ip(identifier, ip, db)
+
 
 @router.get("/")
 async def get_all_ips(db: db_dependency):

@@ -47,7 +47,7 @@ services:
       - api
     ports:
       - "5001:5000"
-    restart: always
+    restart: no
     healthcheck:
       test: curl --fail http://localhost:5000/health-check || exit 1
       interval: 60s

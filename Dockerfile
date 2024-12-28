@@ -15,8 +15,8 @@ RUN poetry install --without=test --no-root
 
 COPY src/ /api
 
-ARG VERSION=dev
 FROM jnstockley/poetry:1.8.5-python3.13.1
+ARG VERSION=dev
 
 RUN apk add curl
 
@@ -30,6 +30,6 @@ EXPOSE 5000
 
 HEALTHCHECK --interval=60s --timeout=10s --start-period=20s --retries=5 CMD curl --fail http://127.0.0.1:5000/health-check || exit 1
 
-ENV VERSION=VERSION
+ENV VERSION=${VERSION}
 
 CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000", "--proxy-headers"]

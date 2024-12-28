@@ -1,11 +1,12 @@
-import toml
+import os
+
 from fastapi import FastAPI
 
 import models
 from controllers import docker, health_check, ip
 from database import engine
 
-version = toml.load("pyproject.toml")["tool"]["poetry"]["version"]
+version = os.environ["VERSION"]
 
 app = FastAPI(
     docs_url="/docs/swagger",

@@ -106,11 +106,17 @@ jobs:
             latest
             ${{ github.event.release.tag_name }}
 
+      - name: Extract Version
+        id: version
+        run: |
+          echo "version=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+
       - name: Extract metadata for main branch
         id: meta_main
         if: github.base_ref == 'main'
         run: |
           echo "tags=jnstockley/api:testing,jnstockley/api:testing-$(date +'%Y%m%d%H%M%S'),ghcr.io/jnstockley/api:testing,ghcr.io/jnstockley/api:testing-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+          echo "version=testing-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v6
@@ -118,6 +124,8 @@ jobs:
           context: .
           platforms: linux/386,linux/amd64,linux/arm64
           push: true
+          build-args: |
+            VERSION=${{ env.version }}
           tags: ${{ steps.meta.outputs.tags || env.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 

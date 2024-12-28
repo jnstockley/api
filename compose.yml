@@ -1,15 +1,42 @@
 services:
-  api:
-    container_name: "jnstockley-api"
-    image: jnstockley/api:latest
-    working_dir: /opt/jstockley-api
+  db:
+    container_name: postgres
+    image: postgres:17-alpine
     env_file:
       - .env
-    restart: always
     networks:
-      - "jnstockley-api"
+      - api
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  api:
+    container_name: api
+    image: jnstockley/api:testing
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    networks:
+      - api
+    ports:
+      - "5001:5000"
+    restart: always
+    healthcheck:
+      test: curl --fail http://localhost:5000/health-check || exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
 
 networks:
-  jnstockley-api:
-    external: true
-    name: "jnstockley-api"
+  api:
+    name: api

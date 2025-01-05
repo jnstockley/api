@@ -1,4 +1,4 @@
-FROM jnstockley/poetry:1.8.5-python3.13.1 AS build
+FROM jnstockley/poetry:2.0.0-python3.13.1 AS build
 
 RUN apk update && \
     apk upgrade && \
@@ -15,7 +15,7 @@ RUN poetry install --without=test --no-root
 
 COPY src/ /api
 
-FROM jnstockley/poetry:1.8.5-python3.13.1
+FROM jnstockley/poetry:2.0.0-python3.13.1
 ARG VERSION=dev
 
 RUN apk add curl

@@ -19,7 +19,7 @@ app = FastAPI(
 )
 
 
-@asynccontextmanager
+@app.on_event("startup")
 async def lifespan():
     models.Base.metadata.create_all(bind=engine)
 

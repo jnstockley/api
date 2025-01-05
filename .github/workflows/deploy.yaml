@@ -58,6 +58,7 @@ jobs:
         run: |
           export API_KEY=${{ secrets.API_KEY }}
           export VERSION=test
+          export DATABASE_URL=sqlite:///test.db
           export PYTHONPATH=src:$PYTHONPATH
           poetry run pytest test
 

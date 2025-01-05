@@ -6,8 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from testcontainers.postgres import PostgresContainer
 
-import models
-from database import get_db
+from database import get_db, Base
 from src.api import app
 
 postgres = PostgresContainer("postgres:17-alpine").start()
@@ -18,7 +17,7 @@ client = TestClient(app)
 DATABASE_URL = postgres.get_connection_url(driver="psycopg")
 os.environ["DATABASE_URL"] = DATABASE_URL
 engine = create_engine(DATABASE_URL)
-models.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

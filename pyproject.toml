@@ -17,17 +17,16 @@ dependencies = [
     "sqlmodel==0.0.22",
     "pytz==2024.2",
     "psycopg==3.2.3",
-    "psycopg-binary==3.2.3"
+    "psycopg-binary==3.2.3",
+    "pytest (>=8.3.4,<9.0.0)"
 ]
 
-[tool.poetry.group.test]
-optional = true
-
-[tool.poetry.group.test.dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "8.3.4"
 black = "24.10.0"
 isort = "5.13.2"
 pytest-cov = "6.0.0"
+testcontainers = {extras = ["postgres"], version = "4.9.0"}
 
 [build-system]
 requires = ["poetry-core"]

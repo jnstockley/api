@@ -10,7 +10,7 @@ COPY . /api
 WORKDIR /api
 
 RUN poetry check && \
-    poetry install
+    poetry install --no-dev
 
 FROM jnstockley/poetry:2.0.0-python3.13.1
 ARG VERSION=dev

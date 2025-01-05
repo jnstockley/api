@@ -65,7 +65,7 @@ jobs:
     if: github.event_name == 'release' || github.base_ref == 'main'
     needs:
       - lint
-   #   - tests
+      - tests
     name: Push Docker image to multiple registries
     runs-on: ubuntu-latest
     permissions:

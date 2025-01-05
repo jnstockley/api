@@ -1,31 +1,32 @@
-[tool.poetry]
+[project]
 name = "api"
 version = "0.1.0"
 description = ""
-authors = ["Jack Stockley <34308937+jnstockley@users.noreply.github.com>"]
+authors = [
+    {name = "Jack Stockley", email = "jack@jstockley.com"}
+]
 readme = "README.md"
 package-mode = false
+requires-python = "3.13.1"
+dependencies = [
+    "fastapi==0.115.6",
+    "uvicorn[standard]==0.34.0",
+    "httpx==0.28.1",
+    "python-multipart==0.0.20",
+    "sqlalchemy==2.0.36",
+    "sqlmodel==0.0.22",
+    "pytz==2024.2",
+    "psycopg==3.2.3",
+    "psycopg-binary==3.2.3",
+    "pytest (>=8.3.4,<9.0.0)"
+]
 
-[tool.poetry.dependencies]
-python = "3.13.1"
-fastapi = "0.115.6"
-uvicorn = {extras = ["standard"], version = "0.34.0"}
-httpx = "0.28.1"
-python-multipart = "0.0.20"
-sqlalchemy = "2.0.36"
-sqlmodel = "0.0.22"
-pytz = "2024.2"
-psycopg = "3.2.3"
-psycopg-binary = "3.2.3"
-
-[tool.poetry.group.test]
-optional = true
-
-[tool.poetry.group.test.dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "8.3.4"
 black = "24.10.0"
 isort = "5.13.2"
 pytest-cov = "6.0.0"
+testcontainers = {extras = ["postgres"], version = "4.9.0"}
 
 [build-system]
 requires = ["poetry-core"]

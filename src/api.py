@@ -1,4 +1,5 @@
 import os
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
@@ -17,7 +18,11 @@ app = FastAPI(
     license_info={"name": "MIT License", "url": "https://mit-license.org"},
 )
 
-models.Base.metadata.create_all(bind=engine)
+
+@app.on_event("startup")
+async def lifespan():
+    models.Base.metadata.create_all(bind=engine)
+
 
 app.include_router(health_check.router)
 app.include_router(docker.router)

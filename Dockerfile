@@ -1,21 +1,18 @@
-FROM jnstockley/poetry:1.8.5-python3.13.1 AS build
+FROM jnstockley/poetry:2.0.0-python3.13.1 AS build
 
 RUN apk update && \
     apk upgrade && \
     apk add alpine-sdk python3-dev musl-dev libffi-dev gcc curl openssl-dev cargo pkgconfig && \
     mkdir /api
 
-COPY pyproject.toml /api
-
-COPY poetry.lock /api
+COPY . /api
 
 WORKDIR /api
 
-RUN poetry install --without=test --no-root
+RUN poetry check && \
+    poetry install --no-dev
 
-COPY src/ /api
-
-FROM jnstockley/poetry:1.8.5-python3.13.1
+FROM jnstockley/poetry:2.0.0-python3.13.1
 ARG VERSION=dev
 
 RUN apk add curl
@@ -32,4 +29,4 @@ HEALTHCHECK --interval=60s --timeout=10s --start-period=20s --retries=5 CMD curl
 
 ENV VERSION=${VERSION}
 
-CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000", "--proxy-headers"]
+ENTRYPOINT ["poetry", "run", "uvicorn", "api:app", "--host", "0.0.0.0", "--port", "5000", "--proxy-headers"]

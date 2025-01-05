@@ -28,7 +28,7 @@ jobs:
       - name: Step 3 - Install Poetry and Dependencies
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
-          poetry install --no-root --with test
+          poetry install
       - name: Step 4 - Lint
         run: |
           poetry run black src/ --check
@@ -53,7 +53,7 @@ jobs:
       - name: Step 3 - Install Poetry and Dependencies
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
-          poetry install --no-root --with test
+          poetry install
       - name: Step 4 - Run Tests
         run: |
           export API_KEY=${{ secrets.API_KEY }}

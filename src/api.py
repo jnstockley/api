@@ -18,9 +18,11 @@ app = FastAPI(
     license_info={"name": "MIT License", "url": "https://mit-license.org"},
 )
 
+
 @asynccontextmanager
 async def lifespan():
     models.Base.metadata.create_all(bind=engine)
+
 
 app.include_router(health_check.router)
 app.include_router(docker.router)

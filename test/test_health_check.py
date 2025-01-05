@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine, StaticPool
+from sqlalchemy import StaticPool, create_engine
 from sqlalchemy.orm import sessionmaker
 from testcontainers.postgres import PostgresContainer
 
@@ -9,16 +9,17 @@ import models
 from database import get_db
 from src.api import app
 
-postgres = PostgresContainer('postgres:17-alpine').start()
+postgres = PostgresContainer("postgres:17-alpine").start()
 
 client = TestClient(app)
 
 # Set up the in-memory SQLite database for testing
-DATABASE_URL = postgres.get_connection_url(driver='psycopg')
+DATABASE_URL = postgres.get_connection_url(driver="psycopg")
 engine = create_engine(DATABASE_URL)
 models.Base.metadata.create_all(bind=engine)
 
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 # Dependency to override the get_db dependency in the main app
 def override_get_db():
@@ -28,6 +29,7 @@ def override_get_db():
 
 
 app.dependency_overrides[get_db] = override_get_db
+
 
 class TestHealthCheck(TestCase):
 

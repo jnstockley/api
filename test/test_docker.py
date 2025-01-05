@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from testcontainers.postgres import PostgresContainer
 
-from database import get_db, Base
+from database import Base, get_db
 from src.api import app
 
 postgres = PostgresContainer("postgres:17-alpine").start()

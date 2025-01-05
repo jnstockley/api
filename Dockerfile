@@ -5,15 +5,12 @@ RUN apk update && \
     apk add alpine-sdk python3-dev musl-dev libffi-dev gcc curl openssl-dev cargo pkgconfig && \
     mkdir /api
 
-COPY pyproject.toml /api
-
-COPY poetry.lock /api
+COPY . /api
 
 WORKDIR /api
 
-RUN poetry install --without=test --no-root
-
-COPY src/ /api
+RUN poetry check && \
+    poetry install
 
 FROM jnstockley/poetry:2.0.0-python3.13.1
 ARG VERSION=dev
@@ -32,4 +29,4 @@ HEALTHCHECK --interval=60s --timeout=10s --start-period=20s --retries=5 CMD curl
 
 ENV VERSION=${VERSION}
 
-CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000", "--proxy-headers"]
+ENTRYPOINT ["poetry", "run", "uvicorn", "api:app", "--host", "0.0.0.0", "--port", "5000", "--proxy-headers"]

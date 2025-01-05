@@ -2,7 +2,7 @@ import os
 from unittest import TestCase
 
 from fastapi.testclient import TestClient
-from sqlalchemy import StaticPool, create_engine
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from testcontainers.postgres import PostgresContainer
 
@@ -16,6 +16,7 @@ client = TestClient(app)
 
 # Set up the in-memory SQLite database for testing
 DATABASE_URL = postgres.get_connection_url(driver="psycopg")
+os.environ['DATABASE_URL'] = DATABASE_URL
 engine = create_engine(DATABASE_URL)
 models.Base.metadata.create_all(bind=engine)
 

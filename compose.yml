@@ -19,7 +19,7 @@ services:
       timeout: 10s
   api:
     container_name: api
-    image: jnstockley/api:testing
+    image: jnstockley/api:latest
     depends_on:
       db:
         condition: service_healthy

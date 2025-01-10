@@ -9,7 +9,8 @@ COPY . /api
 
 WORKDIR /api
 
-RUN poetry check && \
+RUN poetry lock && \
+    poetry check && \
     poetry install --without=dev
 
 FROM jnstockley/poetry:2.0.0-python3.13.1

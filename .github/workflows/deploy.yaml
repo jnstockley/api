@@ -28,6 +28,7 @@ jobs:
       - name: Step 3 - Install Poetry and Dependencies
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
+          poetry lock
           poetry install
       - name: Step 4 - Lint
         run: |
@@ -53,6 +54,7 @@ jobs:
       - name: Step 3 - Install Poetry and Dependencies
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
+          poetry lock
           poetry install
       - name: Step 4 - Run Tests
         run: |

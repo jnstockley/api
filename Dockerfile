@@ -1,4 +1,4 @@
-FROM jnstockley/poetry:2.0.0-python3.13.1 AS build
+FROM jnstockley/poetry:2.0.1-python3.13.1 AS build
 
 RUN apk update && \
     apk upgrade && \
@@ -13,7 +13,7 @@ RUN poetry lock && \
     poetry check && \
     poetry install --without=dev
 
-FROM jnstockley/poetry:2.0.0-python3.13.1
+FROM jnstockley/poetry:2.0.1-python3.13.1
 ARG VERSION=dev
 
 RUN apk add curl

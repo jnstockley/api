@@ -17,7 +17,7 @@ dependencies = [
     "sqlmodel==0.0.22",
     "pytz==2024.2",
     "psycopg==3.2.4",
-    "psycopg-binary==3.2.3",
+    "psycopg-binary==3.2.4",
     "pytest (>=8.3.4,<9.0.0)"
 ]
 

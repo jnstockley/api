@@ -1,4 +1,5 @@
-poetry run black src/
-poetry run black test/
-poetry run isort src/
-poetry run isort test/
+#!/usr/bin/env bash
+
+# Run linter
+poetry run ruff check
+poetry run ruff format --check

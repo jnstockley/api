@@ -31,11 +31,7 @@ jobs:
           poetry lock
           poetry install
       - name: Step 4 - Lint
-        run: |
-          poetry run black src/ --check
-          poetry run black test/ --check
-          poetry run isort src/ --check
-          poetry run isort test/ --check
+        run: ./scripts/lint.sh
 
   tests:
     needs:

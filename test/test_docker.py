@@ -33,7 +33,6 @@ app.dependency_overrides[get_db] = override_get_db
 
 
 class TestDocker(TestCase):
-
     def test_docker_no_auth(self):
         mock_response = [
             {

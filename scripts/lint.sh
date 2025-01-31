@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
 # Run linter
-ruff check
-ruff format --check
+poetry run ruff check
+poertry run ruff format --check

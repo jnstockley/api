@@ -2,4 +2,4 @@
 
 # Run linter
 poetry run ruff check
-poertry run ruff format --check
+poetry run ruff format --check

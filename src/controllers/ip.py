@@ -1,14 +1,11 @@
 import datetime
-import os
 import re
 from typing import Optional
 
-import pytz
 from fastapi import APIRouter, HTTPException, Request, Security
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import session
 
-import database
 import models
 from database import db_dependency
 from util.auth import get_token_header

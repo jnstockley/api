@@ -13,7 +13,7 @@ dependencies = [
     "uvicorn[standard]==0.34.0",
     "httpx==0.28.1",
     "python-multipart==0.0.20",
-    "sqlalchemy==2.0.37",
+    "sqlalchemy==2.0.38",
     "sqlmodel==0.0.22",
     "pytz==2025.1",
     "psycopg==3.2.4",

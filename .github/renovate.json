@@ -14,7 +14,8 @@
       "description": "Manage Alpine OS versions in container image tags",
       "fileMatch": ["\\.gitlab-ci\\.yml$", "Dockerfile"],
       "matchStrings": [
-        "(?:image:\\s+name:\\s*|image:\\s*|services:\\s+-\\s+|FROM\\s+)(?<depName>[\\S]+):(?<currentValue>[\\S]+)"
+        "(?:image:\\s+name:\\s*|image:\\s*|services:\\s+-\\s+|FROM\\s+)(?<depName>[\\S]+):(?<currentValue>[\\S]+)",
+        "(FROM\\s+)(?<depName>[\\S]+):(?<currentValue>[\\S]+)"
       ],
       "versioningTemplate": "regex:^(?<compatibility>[\\S]*\\d+\\.\\d+(?:\\.\\d+)?(?:[\\S]*)?-alpine-?)(?<major>\\d+)\\.(?<minor>\\d+)(?:\\.(?<patch>\\d+))?$",
       "datasourceTemplate": "docker"

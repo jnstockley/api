@@ -11,14 +11,22 @@
   ],
   "regexManagers": [
     {
-      "description": "Manage Alpine OS versions in container image tags",
-      "fileMatch": ["\\.gitlab-ci\\.yml$", "Dockerfile"],
+      "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
-        "(?:image:\\s+name:\\s*|image:\\s*|services:\\s+-\\s+|FROM\\s+)(?<depName>[\\S]+):(?<currentValue>[\\S]+)",
-        "(FROM\\s+)(?<depName>[\\S]+):(?<currentValue>[\\S]+)"
+        "FROM\\s+jnstockley/poetry:(?<currentValue>\\d+\\.\\d+\\.\\d+)-python\\d+\\.\\d+\\.\\d+"
       ],
-      "versioningTemplate": "regex:^(?<compatibility>[\\S]*\\d+\\.\\d+(?:\\.\\d+)?(?:[\\S]*)?-python-?)(?<major>\\d+)\\.(?<minor>\\d+)(?:\\.(?<patch>\\d+))?$",
-      "datasourceTemplate": "docker"
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "semver",
+      "depNameTemplate": "jnstockley/poetry (poetry)"
+    },
+    {
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": [
+        "FROM\\s+jnstockley/poetry:\\d+\\.\\d+\\.\\d+-python(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "semver",
+      "depNameTemplate": "jnstockley/poetry (python)"
     }
   ]
 }

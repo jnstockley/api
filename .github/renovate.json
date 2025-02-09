@@ -13,7 +13,7 @@
     {
       "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
-        "FROM jnstockley/poetry:(?<poetryVersion>[\\d\\.]+)-python(?<pythonVersion>[\\d\\.]+)@sha256:[a-f0-9]+"
+        "FROM jnstockley/poetry:(?<poetryVersion>[\\d\\.]+)-python(?<pythonVersion>[\\d\\.]+)"
       ],
       "datasourceTemplate": "docker",
       "versioningTemplate": "regex:^(?<poetryVersion>[\\d\\.]+)-python(?<pythonVersion>[\\d\\.]+)$",

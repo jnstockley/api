@@ -8,33 +8,5 @@
   ],
   "assignees": [
     "jnstockley"
-  ],
-  "regexManagers": [
-    {
-      "fileMatch": [
-        "^Dockerfile$"
-      ],
-      "matchStrings": [
-        "FROM\\s+jnstockley/poetry:(?<currentValue>(?<poetry>\\d+\\.\\d+\\.\\d+)-python(?<python>\\d+\\.\\d+\\.\\d+))"
-      ],
-      "extractVersion": "(\\d+\\.\\d+\\.\\d+)",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "semver",
-      "depNameTemplate": "jnstockley/poetry (poetry)",
-      "replaceString": "FROM jnstockley/poetry:{{newVersion}}-python{{python}}"
-    },
-    {
-      "fileMatch": [
-        "^Dockerfile$"
-      ],
-      "matchStrings": [
-        "FROM\\s+jnstockley/poetry:(?<currentValue>(?<poetry>\\d+\\.\\d+\\.\\d+)-python(?<python>\\d+\\.\\d+\\.\\d+))"
-      ],
-      "extractVersion": "-python(\\d+\\.\\d+\\.\\d+)$",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "semver",
-      "depNameTemplate": "jnstockley/poetry (python)",
-      "replaceString": "FROM jnstockley/poetry:{{poetry}}-python{{newVersion}}"
-    }
   ]
 }

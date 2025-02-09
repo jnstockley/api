@@ -8,5 +8,16 @@
   ],
   "assignees": [
     "jnstockley"
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": [
+        "FROM jnstockley/poetry:(?<poetryVersion>[\\d\\.]+)-python(?<pythonVersion>[\\d\\.]+)@sha256:[a-f0-9]+"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "regex:^(?<poetryVersion>[\\d\\.]+)-python(?<pythonVersion>[\\d\\.]+)$",
+      "extractVersionTemplate": "{{#if poetryVersion}}{{poetryVersion}}{{/if}}-python{{#if pythonVersion}}{{pythonVersion}}{{/if}}"
+    }
   ]
 }

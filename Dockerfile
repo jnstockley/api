@@ -1,4 +1,4 @@
-FROM jnstockley/poetry:2.0.1-python3.13 AS build
+FROM jnstockley/poetry:2.0.1-python3.13.1 AS build
 
 RUN apk update && \
     apk upgrade && \

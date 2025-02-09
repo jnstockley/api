@@ -7,13 +7,13 @@ authors = [
 ]
 readme = "README.md"
 package-mode = false
-requires-python = "==3.13.1"
+requires-python = "<4.0,>=3.13"
 dependencies = [
     "fastapi==0.115.8",
     "uvicorn[standard]==0.34.0",
     "httpx==0.28.1",
     "python-multipart==0.0.20",
-    "sqlalchemy==2.0.37",
+    "sqlalchemy==2.0.38",
     "sqlmodel==0.0.22",
     "pytz==2025.1",
     "psycopg==3.2.4",
@@ -24,7 +24,7 @@ dependencies = [
 pytest = "==8.3.4"
 pytest-cov = "==6.0.0"
 testcontainers = {extras = ["postgres"], version = "==4.9.1"}
-ruff = "==0.9.4"
+ruff = "==0.9.5"
 
 [build-system]
 requires = ["poetry-core"]

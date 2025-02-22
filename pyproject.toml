@@ -16,8 +16,8 @@ dependencies = [
     "sqlalchemy==2.0.38",
     "sqlmodel==0.0.22",
     "pytz==2025.1",
-    "psycopg==3.2.4",
-    "psycopg-binary==3.2.4",
+    "psycopg==3.2.5",
+    "psycopg-binary==3.2.5",
 ]
 
 [tool.poetry.group.dev.dependencies]

@@ -14,7 +14,7 @@ dependencies = [
     "httpx==0.28.1",
     "python-multipart==0.0.20",
     "sqlalchemy==2.0.38",
-    "sqlmodel==0.0.23",
+    "sqlmodel==0.0.24",
     "pytz==2025.1",
     "psycopg==3.2.5",
     "psycopg-binary==3.2.5",

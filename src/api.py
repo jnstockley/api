@@ -16,11 +16,12 @@ try:
 except Exception:
     version = "0.1.0"
 
-#@app.on_event("startup")
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     models.Base.metadata.create_all(bind=engine)
     yield
+
 
 app = FastAPI(
     docs_url="/docs/swagger",
@@ -29,9 +30,11 @@ app = FastAPI(
     version=version,
     lifespan=lifespan,
     contact={"name": "Jack Stockley"},
-    license_info={"name": "Apache-2.0", "url": "https://opensource.org/license/apache-2-0"},
+    license_info={
+        "name": "Apache-2.0",
+        "url": "https://opensource.org/license/apache-2-0",
+    },
 )
-
 
 
 app.include_router(health_check.router)

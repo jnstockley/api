@@ -169,7 +169,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Step 6 - Extract metadata
+      - name: Step 6 - Create version tag
+        if: github.event_name == 'release'
+        run: echo "VERSION=${{ github.event.release.tag_name }}#v" >> "$GITHUB_ENV"
+
+      - name: Step 6 - Create testing version tag for main branch
+        if: github.ref_name == 'main'
+        run: echo "VERSION=$(date +'%Y%m%d%H%M%S').dev" >> "$GITHUB_ENV"
+
+      - name: Step 7 - Extract metadata
         id: release
         if: github.event_name == 'release'
         uses: docker/metadata-action@v5
@@ -181,7 +189,7 @@ jobs:
             latest
             ${{ github.event.release.tag_name }}
 
-      - name: Step 6 - Extract metadata for main branch
+      - name: Step 7 - Extract metadata for main branch
         id: testing
         if: github.ref_name == 'main'
         uses: docker/metadata-action@v5
@@ -192,14 +200,6 @@ jobs:
           tags: |
             dev
             ${{ env.VERSION }}
-
-      - name: Step 7 - Create version tag
-        if: github.event_name == 'release'
-        run: echo "VERSION=${{ github.event.release.tag_name }}#v" >> "$GITHUB_ENV"
-
-      - name: Step 7 - Create testing version tag for main branch
-        if: github.ref_name == 'main'
-        run: echo "VERSION=$(date +'%Y%m%d%H%M%S').dev" >> "$GITHUB_ENV"
 
       - name: Step 8 - Update version in pyproject.toml
         run: |

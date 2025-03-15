@@ -1,5 +1,5 @@
 [project]
-name = "api"
+name = "js-api"
 version = "0.1.0"
 description = "Custom API written in Python using FastAPI"
 authors = [

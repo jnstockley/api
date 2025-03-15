@@ -102,7 +102,7 @@ jobs:
 
       - name: Step 5 - Create version tag
         if: github.event_name == 'release'
-        run: echo "VERSION=${{ github.event.release.tag_name }}#v" >> "$GITHUB_ENV"
+        run: echo "VERSION=$(echo ${{ github.event.release.tag_name }} | sed 's/^v//')" >> "$GITHUB_ENV"
 
       - name: Step 5 - Create testing version tag for main branch
         if: github.ref_name == 'main'
@@ -171,7 +171,7 @@ jobs:
 
       - name: Step 6 - Create version tag
         if: github.event_name == 'release'
-        run: echo "VERSION=${{ github.event.release.tag_name }}#v" >> "$GITHUB_ENV"
+        run: echo "VERSION=$(echo ${{ github.event.release.tag_name }} | sed 's/^v//')" >> "$GITHUB_ENV"
 
       - name: Step 6 - Create testing version tag for main branch
         if: github.ref_name == 'main'

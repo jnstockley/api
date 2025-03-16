@@ -12,7 +12,7 @@ async def get_latest_docker_version(docker_image: str):
         raise HTTPException(
             status_code=422, detail="Missing docker_image query parameter"
         )
-    docker_parts = docker_image.split(":")[0]
+    docker_parts = docker_image.split(":")
     current_version = ""
     if len(docker_parts) > 1:
         current_version = docker_parts[-1]

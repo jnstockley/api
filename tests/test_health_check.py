@@ -18,14 +18,26 @@ client = TestClient(app)
 DATABASE_URL = postgres.get_connection_url(driver="psycopg")
 os.environ["DATABASE_URL"] = DATABASE_URL
 engine = create_engine(DATABASE_URL)
+invalid_engine = create_engine(
+    "postgresql+psycopg://postgres:postgres@postgres:5432/postgres2"
+)
 models.Base.metadata.create_all(bind=engine)
 
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+InvalidSessionLocal = sessionmaker(
+    autocommit=False, autoflush=False, bind=invalid_engine
+)
 
 
 # Dependency to override the get_db dependency in the main app
 def override_get_db():
     database = TestingSessionLocal()
+    yield database
+    database.close()
+
+
+def override_invalid_db():
+    database = InvalidSessionLocal()
     yield database
     database.close()
 

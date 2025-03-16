@@ -3,8 +3,7 @@ from typing import Annotated
 
 from fastapi.params import Depends
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlmodel import Session
 
 SQLALCHEMY_DATABASE_URL = os.environ["DATABASE_URL"]

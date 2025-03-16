@@ -1,10 +1,17 @@
 FROM ghcr.io/astral-sh/uv:0.6.6-python3.13-alpine
 
+RUN adduser -S app && \
+    mkdir /app && \
+    chown app /app
+
+USER app
+
 ADD . /app
 
 WORKDIR /app
 
-RUN uv sync --frozen --no-dev
+RUN export PYTHONPATH=/app/src:$PYTHONPATH && \
+    uv sync --frozen --no-dev
 
 EXPOSE 5000
 

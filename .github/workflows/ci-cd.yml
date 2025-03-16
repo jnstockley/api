@@ -177,9 +177,9 @@ jobs:
         if: github.ref_name == 'main'
         run: echo "VERSION=$(date +'%Y%m%d%H%M%S').dev" >> "$GITHUB_ENV"
 
-      - name: Step 7 - Extract metadata
+      - name: Step 7 - Extract metadata for release
         id: release
-        if: github.event_name == 'release'
+        if: github.event_name == 'release' && github.event.release.prerelease == 'false'
         uses: docker/metadata-action@v5
         with:
           images: |
@@ -189,8 +189,20 @@ jobs:
             latest
             ${{ github.event.release.tag_name }}
 
-      - name: Step 7 - Extract metadata for main branch
+      - name: Step 7 - Extract metadata for pre-release
         id: testing
+        if: github.event_name == 'release' && github.event.release.prerelease == 'true'
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}
+            ghcr.io/${{ github.actor }}/${{ github.event.repository.name }}
+          tags: |
+            testing
+            ${{ github.event.release.tag_name }}
+
+      - name: Step 7 - Extract metadata for main branch
+        id: dev
         if: github.ref_name == 'main'
         uses: docker/metadata-action@v5
         with:
@@ -239,7 +251,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.release.outputs.tags || steps.testing.outputs.tags }}
+          tags: ${{ steps.release.outputs.tags || steps.testing.outputs.tags || steps.dev.outputs.tags }}
           annotations: |
             org.opencontainers.image.created=${{ env.RFC3339_DATETIME }}
             org.opencontainers.image.authors=${{ github.actor }}

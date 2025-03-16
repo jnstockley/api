@@ -105,6 +105,20 @@ class TestDocker(TestCase):
         assert response.status_code == 404
         assert response.json() == {"detail": f"{docker_image} not found in Docker Hub"}
 
+    def test_docker_valid_api_key_no_version(self):
+        docker_image = "adguard/adguardhome"
+        api_key = os.environ["API_KEY"]
+        header = {"X-API-KEY": api_key}
+        param = {"docker_image": docker_image}
+        response = client.get("/docker", headers=header, params=param)
+        assert response.status_code == 200
+        res_json = response.json()
+        assert "image" in res_json
+        assert "latest_image_version" in res_json
+        assert "newer_version" in res_json
+        assert docker_image.split(":")[0] in res_json["image"]
+        assert res_json["newer_version"]
+
     def test_docker_valid_api_key_valid_param(self):
         docker_image = "adguard/adguardhome:v0.107.43"
         api_key = os.environ["API_KEY"]

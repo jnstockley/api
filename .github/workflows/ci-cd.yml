@@ -251,7 +251,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.release.outputs.tags || steps.testing.outputs.tags }}
+          tags: ${{ steps.release.outputs.tags || steps.testing.outputs.tags || steps.dev.outputs.tags }}
           annotations: |
             org.opencontainers.image.created=${{ env.RFC3339_DATETIME }}
             org.opencontainers.image.authors=${{ github.actor }}

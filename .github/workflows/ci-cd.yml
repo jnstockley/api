@@ -179,7 +179,7 @@ jobs:
 
       - name: Step 7 - Extract metadata for release
         id: release
-        if: github.event_name == 'release' && !github.event.prerelease
+        if: github.event_name == 'release' && !github.event.release.prerelease
         uses: docker/metadata-action@v5
         with:
           images: |
@@ -191,7 +191,7 @@ jobs:
 
       - name: Step 7 - Extract metadata for pre-release
         id: testing
-        if: github.event_name == 'release' && github.event.prerelease
+        if: github.event_name == 'release' && github.event.release.prerelease
         uses: docker/metadata-action@v5
         with:
           images: |

@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:0.6.6-python3.13-alpine
+FROM ghcr.io/astral-sh/uv:0.6.9-python3.13-alpine
 
 RUN adduser -S app && \
     mkdir /app && \

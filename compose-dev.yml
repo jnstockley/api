@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: api
+    container_name: api_dev
     depends_on:
       db:
         condition: service_healthy
@@ -40,7 +40,7 @@ services:
           target: api
   db:
     image: postgres:17-alpine
-    container_name: postgres
+    container_name: postgres_dev
     volumes:
       - ./postgres:/var/lib/postgresql/data
     env_file:

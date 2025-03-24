@@ -1,20 +1,29 @@
-FROM ghcr.io/astral-sh/uv:0.6.9-python3.13-alpine
+FROM ghcr.io/astral-sh/uv:0.6.9-python3.13-alpine AS build
+
+WORKDIR /app
+
+COPY ./pyproject.toml .
+COPY ./uv.lock .
+
+RUN uv sync --frozen --no-dev
+
+FROM python:3.13.2-alpine
 
 RUN adduser -S app && \
     mkdir /app && \
     chown app /app
-
 USER app
-
-ADD . /app
 
 WORKDIR /app
 
-RUN export PYTHONPATH=/app/src:$PYTHONPATH && \
-    uv sync --frozen --no-dev
+COPY /src src
+COPY --from=build /app/.venv .venv
 
 EXPOSE 5000
 
+ENV PATH="/app/.venv/bin:$PATH"
+ENV PYTHONPATH="/app/src"
+
 HEALTHCHECK --interval=60s --timeout=10s --start-period=20s --retries=5 CMD curl --fail http://127.0.0.1:5000/health-check || exit 1
 
-ENTRYPOINT ["uv", "run", "--frozen", "--directory", "src", "uvicorn", "api:app", "--host", "0.0.0.0", "--port", "5000", "--proxy-headers"]
+ENTRYPOINT ["uvicorn", "src.api:app", "--log-level", "info", "--host", "0.0.0.0" , "--port", "5000", "--proxy-headers"]

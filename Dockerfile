@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:0.6.13-python3.13-alpine AS build
+FROM ghcr.io/astral-sh/uv:0.6.14-python3.13-alpine AS build
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ COPY ./uv.lock .
 
 RUN uv sync --frozen --no-dev
 
-FROM python:3.13.2-alpine
+FROM python:3.13.3-alpine
 
 RUN adduser -S app && \
     mkdir /app && \

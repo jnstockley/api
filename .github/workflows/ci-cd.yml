@@ -250,6 +250,8 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
+          build-args:
+            VERSION=${{ env.VERSION }}
           push: true
           tags: ${{ steps.release.outputs.tags || steps.testing.outputs.tags || steps.dev.outputs.tags }}
           annotations: |

@@ -1,13 +1,6 @@
-FROM ghcr.io/astral-sh/uv:0.7.8-python3.13-alpine AS build
-
-WORKDIR /app
-
-COPY ./pyproject.toml .
-COPY ./uv.lock .
-
-RUN uv sync --frozen --no-dev
-
 FROM python:3.13.3-alpine
+
+ARG VERSION=0.0.0.dev
 
 RUN adduser -S app && \
     mkdir /app && \
@@ -16,14 +9,17 @@ USER app
 
 WORKDIR /app
 
-COPY /src src
-COPY --from=build /app/.venv .venv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-EXPOSE 5000
+COPY . /app
 
-ENV PATH="/app/.venv/bin:$PATH"
-ENV PYTHONPATH="/app/src"
+RUN sed -i "s/^version = .*/version = \"${VERSION}\"/" /app/pyproject.toml
+
+RUN uv sync --frozen --no-cache
+
+ENV PATH=/app/.venv/bin:$PATH
+ENV PYTHONPATH=src
 
 HEALTHCHECK --interval=60s --timeout=10s --start-period=20s --retries=5 CMD wget -nv -t 1 --spider http://127.0.0.1:5000/health-check || exit 1
 
-ENTRYPOINT ["uvicorn", "src.api:app", "--log-level", "info", "--host", "0.0.0.0" , "--port", "5000", "--proxy-headers"]
+CMD ["fastapi", "run", "src/api.py", "--port", "5000", "--host", "0.0.0.0"]

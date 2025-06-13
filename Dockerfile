@@ -1,4 +1,4 @@
-FROM python:3.13.4-alpine
+FROM python:3.13.5-alpine
 
 ARG VERSION=0.0.0.dev
 

@@ -9,8 +9,8 @@ readme = "README.md"
 requires-python = ">=3.13, <3.14"
 dependencies = [
     "fastapi[standard]==0.116.1",
-    "psycopg==3.2.9",
-    "psycopg-binary==3.2.9",
+    "psycopg==3.2.10",
+    "psycopg-binary==3.2.10",
     "sqlalchemy==2.0.43",
     "sqlmodel==0.0.24",
 ]

@@ -1,25 +1,34 @@
-FROM python:3.13.7-alpine
+FROM python:3.13.7 AS  build
 
 ARG VERSION=0.0.0.dev
-
-RUN adduser -S app && \
-    mkdir /app && \
-    chown app /app
-USER app
 
 WORKDIR /app
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-COPY . /app
+COPY ./pyproject.toml .
+COPY ./uv.lock .
 
-RUN sed -i "s/^version = .*/version = \"${VERSION}\"/" /app/pyproject.toml
+RUN uv version ${VERSION} && \
+    uv sync --frozen --no-cache --no-dev
 
-RUN uv sync --frozen --no-cache
+FROM python:3.13.7-slim
 
-ENV PATH=/app/.venv/bin:$PATH
-ENV PYTHONPATH=src
+RUN apt-get update && \
+    apt-get install curl -yqq --no-install-recommends  && \
+    adduser app
 
-HEALTHCHECK --interval=60s --timeout=10s --start-period=20s --retries=5 CMD wget -nv -t 1 --spider http://127.0.0.1:5000/health-check || exit 1
+USER app
 
-CMD ["fastapi", "run", "src/api.py", "--port", "5000", "--host", "0.0.0.0"]
+WORKDIR /app
+
+COPY . .
+COPY --from=build /app/.venv .venv
+COPY --from=build /app/pyproject.toml .
+COPY --from=build /app/uv.lock .
+
+# Set up environment variables for production
+ENV PATH="/app/.venv/bin:$PATH"
+ENV PYTHONPATH=/app/src/:$PYTHONPATH
+
+ENTRYPOINT ["fastapi", "run", "src/api.py", "--port", "5000", "--host", "0.0.0.0"]

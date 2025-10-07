@@ -14,7 +14,9 @@ RUN uv version ${VERSION} && \
 
 FROM python:3.13.7-slim
 
-RUN adduser app
+RUN apt-get update && \
+    apt-get install curl -yqq --no-install-recommends  && \
+    adduser app
 
 USER app
 

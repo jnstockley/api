@@ -11,7 +11,7 @@ dependencies = [
     "fastapi[standard]==0.119.0",
     "psycopg==3.2.10",
     "psycopg-binary==3.2.10",
-    "sqlalchemy==2.0.43",
+    "sqlalchemy==2.0.44",
     "sqlmodel==0.0.27",
 ]
 

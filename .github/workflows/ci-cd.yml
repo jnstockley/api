@@ -68,8 +68,6 @@ jobs:
 
       - name: Step 5 - Run Tests
         run: |
-          export API_KEY=${{ secrets.API_KEY }}
-          export DATABASE_URL=sqlite:///test.db
           export PYTHONPATH=src/:$PYTHONPATH
           mkdir -p logs/
           uv run pytest --cov src --cov-branch --cov-report=xml --junitxml=junit.xml -o junit_family=legacy

@@ -1,27 +1,24 @@
 ---
-name: API (Dev)
+name: Python Starter Project (Dev)
 services:
-  api:
+  python-starter:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: api_dev
-    depends_on:
-      db:
-        condition: service_healthy
+    container_name: python-starter-dev
     env_file:
       - .env
-    ports:
-      - '0.0.0.0:5001:5000'
-    networks:
-      - api
+    # Add ports if needed
+    # ports:
+    #   - '0.0.0.0:5001:5000'
     restart: unless-stopped
-    healthcheck:
-      test: curl -sf http://127.0.0.1:5000/health-check || exit 1
-      interval: 60s
-      retries: 5
-      start_period: 20s
-      timeout: 10s
+    # Add healthcheck if needed
+    # healthcheck:
+    #   test: curl --fail http://localhost:5000/health-check || exit 1
+    #   interval: 60s
+    #   retries: 5
+    #   start_period: 20s
+    #   timeout: 10s
     develop:
       watch:
         - action: rebuild
@@ -34,29 +31,7 @@ services:
           path: uv.lock
         - action: sync+restart
           path: compose-dev.yml
-          target: api
+          target: python-starter
         - action: sync+restart
           path: .env
-          target: api
-  db:
-    image: postgres:18-alpine
-    container_name: postgres_dev
-    volumes:
-      - ./postgres:/var/lib/postgresql/18/docker
-    env_file:
-      - .env
-    ports:
-      - '0.0.0.0:5432:5432'
-    networks:
-      - api
-    restart: always
-    healthcheck:
-      test: pg_isready -U postgres
-      interval: 60s
-      retries: 5
-      start_period: 20s
-      timeout: 10s
-
-networks:
-  api:
-    name: api
+          target: python-starter

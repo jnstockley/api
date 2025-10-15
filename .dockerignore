@@ -177,6 +177,5 @@ cython_debug/
 .github
 scripts
 tests
-postgres/
 data/
 logs/

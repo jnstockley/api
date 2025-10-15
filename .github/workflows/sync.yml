@@ -1,95 +1,71 @@
 ---
-name: Sync from External Repo
+name: Sync from Python Starter
 
 on:
   workflow_dispatch:
-    inputs:
-      source_repo:
-        description: 'Full URL of the source repo (e.g. https://github.com/org/source-repo.git)'
-        required: true
-        default: 'https://github.com/jnstockley/python-starter.git'
-      source_branch:
-        description: 'Branch to pull from (e.g. main)'
-        required: true
-        default: 'main'
-      target_branch:
-        description: 'Branch to create or update in this repo'
-        required: true
-        default: 'sync/external-update'
+  schedule:
+    - cron: "0 0 * * *" # optional: runs daily at midnight UTC
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    environment: sync
+
     steps:
-      - name: Checkout destination repository
+      - name: Checkout target repo
         uses: actions/checkout@v4
         with:
+          token: ${{ secrets.GH_TOKEN }}
           fetch-depth: 0
 
-      - name: Configure git
+      - name: Delete existing sync branch if present
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Add and fetch source repository
-        run: |
-          git remote add source ${{ github.event.inputs.source_repo }}
-          git fetch source ${{ github.event.inputs.source_branch }}
-
-      - name: Create merge branch from dev
-        run: |
-          git checkout dev
-          git checkout -B ${{ github.event.inputs.target_branch }}
-
-      - name: Attempt merge
-        id: merge
-        run: |
-          echo "Merging from source/${{ github.event.inputs.source_branch }} into ${{ github.event.inputs.target_branch }}"
-          set +e
-          git merge source/${{ github.event.inputs.source_branch }} \
-            --allow-unrelated-histories --no-commit --no-ff
-          MERGE_STATUS=$?
-          set -e
-
-          git add -A
-
-          # Detect if changes exist vs dev (not vs itself)
-          if git diff --quiet dev; then
-            echo "✅ No differences detected compared to dev branch."
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-          else
-            echo "✅ Changes detected compared to dev branch."
-            if [ $MERGE_STATUS -ne 0 ]; then
-              echo "⚠️ Merge conflicts detected; committing partial merge."
-              git commit -m "Partial merge with conflicts from source repo (manual resolution required)" || true
-            else
-              git commit -m "Merge from external repo: ${{ github.event.inputs.source_branch }}"
-            fi
-            echo "has_changes=true" >> $GITHUB_OUTPUT
+          git fetch origin
+          if git show-ref --verify --quiet refs/heads/sync; then
+            git branch -D sync
+          fi
+          if git ls-remote --exit-code --heads origin sync; then
+            git push origin --delete sync
           fi
 
-      - name: Push merge branch
-        if: steps.merge.outputs.has_changes == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Create new sync branch
         run: |
-          git config --unset-all http.https://github.com/.extraheader || true
-          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
-          git push origin HEAD:${{ github.event.inputs.target_branch }} --force
+          git checkout -b sync
 
-      - name: Create Pull Request into dev
-        if: steps.merge.outputs.has_changes == 'true' || github.event.inputs.force_pr == 'true'
+      - name: Pull in changes from external repo
+        run: |
+          git remote add external https://github.com/jnstockley/python-starter.git
+          git fetch external main
+          git checkout external/main -- .
+          git add .
+          git commit -m "Sync from python-starter" || echo "No changes to commit"
+
+      - name: Push sync branch
+        run: |
+          git push origin sync --force
+
+      - name: Check for differences with dev
+        id: diff
+        run: |
+          git fetch origin dev
+          if git diff --quiet origin/dev..sync; then
+            echo "no_diff=true" >> $GITHUB_OUTPUT
+          else
+            echo "no_diff=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request if differences exist
+        if: steps.diff.outputs.no_diff == 'false'
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GH_TOKEN }}
-          branch: ${{ github.event.inputs.target_branch }}
           base: dev
-          title: "Merge update from external repo: ${{ github.event.inputs.source_branch }}"
+          head: sync
+          title: "Sync from python-starter"
           body: |
-            This pull request merges changes from **${{ github.event.inputs.source_repo }}**
-            branch **${{ github.event.inputs.source_branch }}** into **dev**.
-
-            ⚠️ If there are merge conflicts, please resolve them manually in the GitHub UI.
-
-            _Triggered by workflow: `${{ github.workflow }}`_
+            This PR syncs changes from [jnstockley/python-starter](https://github.com/jnstockley/python-starter).
+          branch: sync
+          delete-branch: false

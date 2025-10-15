@@ -4,19 +4,15 @@ name: Sync from Python Starter
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *" # optional: runs daily at midnight UTC
-
-permissions:
-  contents: write
-  pull-requests: write
+    - cron: "0 0 * * *"
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    environment: sync
+    environment: Sync
     steps:
       - name: Checkout target repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: 'dev'
           token: ${{ secrets.GH_TOKEN }}

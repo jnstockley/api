@@ -16,7 +16,7 @@ jobs:
     environment: sync
     steps:
       - name: Checkout target repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: 'dev'
           token: ${{ secrets.GH_TOKEN }}

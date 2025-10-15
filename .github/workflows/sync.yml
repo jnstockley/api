@@ -76,6 +76,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
+          # Remove any pre-set GitHub credentials so our PAT is used
+          git config --unset-all http.https://github.com/.extraheader || true
+
           # Reconfigure origin remote to use the PAT instead of GITHUB_TOKEN
           git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
 

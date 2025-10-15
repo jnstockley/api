@@ -6,11 +6,11 @@ on:
       source_repo:
         description: 'Full URL of the source repo (e.g. https://github.com/org/source-repo.git)'
         required: true
-				default: 'jnstockley/python-starter'
+        default: 'jnstockley/python-starter'
       source_branch:
         description: 'Branch to pull from (e.g. main)'
         required: true
-				default: 'main'
+        default: 'main'
       target_branch:
         description: 'Branch to create or update in this repo'
         required: true

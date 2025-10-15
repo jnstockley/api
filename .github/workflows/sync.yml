@@ -37,56 +37,49 @@ jobs:
           git remote add source ${{ github.event.inputs.source_repo }}
           git fetch source ${{ github.event.inputs.source_branch }}
 
+      - name: Create merge branch from dev
+        run: |
+          git checkout dev
+          git checkout -B ${{ github.event.inputs.target_branch }}
+
       - name: Attempt merge
         id: merge
         run: |
-          set -e
-          git checkout -B ${{ github.event.inputs.target_branch }}
-
-          echo "Merging from source/${{ github.event.inputs.source_branch }} ..."
-          # Try merging unrelated histories but do not commit automatically
+          echo "Merging from source/${{ github.event.inputs.source_branch }} into ${{ github.event.inputs.target_branch }}"
           set +e
           git merge source/${{ github.event.inputs.source_branch }} \
             --allow-unrelated-histories --no-commit --no-ff
           MERGE_STATUS=$?
           set -e
 
-          # Stage all changes so we can detect real diffs
           git add -A
 
-          # Now detect if anything actually changed
-          if git diff --cached --quiet; then
-            echo "✅ No file changes detected after merge attempt, skipping PR creation."
+          # Detect if changes exist vs dev (not vs itself)
+          if git diff --quiet dev; then
+            echo "✅ No differences detected compared to dev branch."
             echo "has_changes=false" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          # Handle merge conflicts or normal merge
-          if [ $MERGE_STATUS -ne 0 ]; then
-            echo "⚠️ Merge conflicts detected. Committing partial merge for manual resolution."
-            git commit -m "Partial merge with conflicts from source repo (manual resolution required)" || true
           else
-            git commit -m "Merge from external repo: ${{ github.event.inputs.source_branch }}"
+            echo "✅ Changes detected compared to dev branch."
+            if [ $MERGE_STATUS -ne 0 ]; then
+              echo "⚠️ Merge conflicts detected; committing partial merge."
+              git commit -m "Partial merge with conflicts from source repo (manual resolution required)" || true
+            else
+              git commit -m "Merge from external repo: ${{ github.event.inputs.source_branch }}"
+            fi
+            echo "has_changes=true" >> $GITHUB_OUTPUT
           fi
-
-          echo "has_changes=true" >> $GITHUB_OUTPUT
 
       - name: Push merge branch
         if: steps.merge.outputs.has_changes == 'true'
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          # Remove any pre-set GitHub credentials so our PAT is used
           git config --unset-all http.https://github.com/.extraheader || true
-
-          # Reconfigure origin remote to use the PAT instead of GITHUB_TOKEN
           git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
-
-          # Now push with authentication as the PAT user
           git push origin HEAD:${{ github.event.inputs.target_branch }} --force
 
-      - name: Create Pull Request
-        if: steps.merge.outputs.has_changes == 'true'
+      - name: Create Pull Request into dev
+        if: steps.merge.outputs.has_changes == 'true' || github.event.inputs.force_pr == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GH_TOKEN }}
@@ -95,6 +88,8 @@ jobs:
           title: "Merge update from external repo: ${{ github.event.inputs.source_branch }}"
           body: |
             This pull request merges changes from **${{ github.event.inputs.source_repo }}**
-            branch **${{ github.event.inputs.source_branch }}**.
+            branch **${{ github.event.inputs.source_branch }}** into **dev**.
 
             ⚠️ If there are merge conflicts, please resolve them manually in the GitHub UI.
+
+            _Triggered by workflow: `${{ github.workflow }}`_

@@ -91,6 +91,7 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
           branch: ${{ github.event.inputs.target_branch }}
+          base: dev
           title: "Merge update from external repo: ${{ github.event.inputs.source_branch }}"
           body: |
             This pull request merges changes from **${{ github.event.inputs.source_repo }}**

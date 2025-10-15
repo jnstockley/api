@@ -14,9 +14,7 @@ RUN uv version ${VERSION} && \
 
 FROM python:3.13.7-slim
 
-RUN apt-get update && \
-    apt-get install curl -yqq --no-install-recommends  && \
-    adduser app
+RUN adduser app
 
 USER app
 
@@ -31,4 +29,4 @@ COPY --from=build /app/uv.lock .
 ENV PATH="/app/.venv/bin:$PATH"
 ENV PYTHONPATH=/app/src/:$PYTHONPATH
 
-ENTRYPOINT ["fastapi", "run", "src/api.py", "--port", "5000", "--host", "0.0.0.0"]
+ENTRYPOINT ["python", "src/main.py"]

@@ -1,14 +1,37 @@
-# API
-This is a custom API, written in Python using FastAPI, to help me accomplish tasks the can be improved through a RESTful API
+# Python Starter
 
-## Setup
-Simplest setup is to start from [compose.yml](https://github.com/jnstockley/api/blob/dev/compose.yml) and [template.env](https://github.com/jnstockley/api/blob/dev/template.env), which should be renamed to `.env`
+## Steps to set up
+1. Create a new repository in GitHub using this repository as a template
+2. Generate Docker Hub PAT (Personal Access Token)
+3. Create an [Environment in GitHub](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment#creating-an-environment) with the following secrets
+   - DOCKER_USERNAME (Docker Hub username)
+   - DOCKER_PASSWORD (Docker Hub PAT)
+4. Create a Docker Hub repository with the same name as the GitHub repository
+5. Update `assignees` in `renovate.json` with your GitHub username
+6. Set up code-cove and make sure it has access to this repository
+   - https://docs.codecov.com/docs/quick-start
+7. Setup branch protection rules
+   - Set `Enrforcment Status` to `Enabled`
+   - Make sure `Target branches` set to `main` or default branch
+   - Ensure these `Branch rules` are selected
+     - `Restrict deletions`
+     - `Require status checks to pass` with these checks
+       - `Lint`
+       - `Test`
+     - `Block force pushes`
+8. Create a PyPi `Trusted Publisher`
+   - https://pypi.org/manage/account/publishing/
+9. Ensure the name in `pyproject.toml` matches the name of the package on PyPi
+10. Make sure the following linters are installed externally of the project
+    - yamllint
+    - shellcheck
+    - shfmt
+    - node (npx/dclint)
 
-### Environment Vairables
-- `API_KEY` - Any long, random string. Keep this secret as this is the only form of authentication for the API. All routes require it, except `/health-check/`
-- `DATABASE_URL` - The URL to connect to postgres DB. Must start with `postgresql+psycopg://`. Should be in the format specifiec in [template.env](https://github.com/jnstockley/api/blob/dev/template.env)
-- `TZ` - Timezone of the container
-- `PGTZ` - Timezone the Postgres container should use
-
-## How to Access
-Using the [compose.yml](https://github.com/jnstockley/api/blob/dev/compose.yml) file, you can access the API at `http://<IP>:5000/health-check`. If everything is setup correctly, you should see `{"status":"ok"}`
+## TODO
+- [X] Handle GitHub pre-release
+- [X] Update PYTHONPATH with src folder
+- [X] Add custom user to Dockerfile
+- [ ] Fix Dockerfile
+- [ ] Fix health check
+- [ ] Fix version number

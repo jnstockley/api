@@ -18,40 +18,32 @@ jobs:
       - name: Checkout target repo
         uses: actions/checkout@v4
         with:
+          ref: 'dev'
           token: ${{ secrets.GH_TOKEN }}
           fetch-depth: 0
+  
       - name: Fetch external repo and create sync branch
         run: |
           git remote add external https://github.com/jnstockley/python-starter.git
           git fetch external main
-          # Delete local sync branch if exists
-          git branch -D sync || echo "No local sync branch to delete"
-          # Create sync branch based on external main
-          git checkout -b sync external/main
-          # Delete remote sync branch if exists
-          if git ls-remote --exit-code --heads origin sync; then
-            git push origin --delete sync
-          fi
-          # Push sync branch
-          git push origin sync
-
-      - name: Check for differences with dev
-        id: diff
-        run: |
-          git fetch origin dev
-          if git diff --quiet origin/dev..sync; then
-            echo "no_diff=true" >> $GITHUB_OUTPUT
+          # Merge external main into current branch, overwriting conflicts
+          git merge -s ours --no-commit external/main || true
+          git checkout external/main -- .
+          git add .
+          # Commit if there are changes
+          if ! git diff --cached --quiet; then
+            git commit -m "Pull changes from python-starter"
+            git push origin HEAD
           else
-            echo "no_diff=false" >> $GITHUB_OUTPUT
+            echo "No changes to commit"
           fi
 
       - name: Create Pull Request if differences exist
         if: steps.diff.outputs.no_diff == 'false'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GH_TOKEN }}
           base: dev
-          head: sync
           title: "Sync from python-starter"
           body: |
             This PR syncs changes from [jnstockley/python-starter](https://github.com/jnstockley/python-starter).

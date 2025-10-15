@@ -29,7 +29,7 @@ jobs:
           git remote add external https://github.com/jnstockley/python-starter.git
           git fetch external main
           # Merge external main into current branch, overwriting conflicts
-          git merge -s ours --no-commit external/main || true
+          git merge external/main --allow-unrelated-histories
           git checkout external/main -- .
           git add .
           # Commit if there are changes

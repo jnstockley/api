@@ -8,8 +8,15 @@ on:
 
 jobs:
   sync:
+<<<<<<< HEAD
     runs-on: ubuntu-latest
     environment: Sync
+=======
+    if: ${{ github.repository != 'jnstockley/python-starter' }}
+    runs-on: ubuntu-latest
+    environment: sync
+    name: Sync
+>>>>>>> external/main
     steps:
       - name: Checkout target repo
         uses: actions/checkout@v5

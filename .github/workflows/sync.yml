@@ -1,21 +1,10 @@
 ---
-name: Sync from External Repo
+name: Sync from Python Starter
 
 on:
   workflow_dispatch:
-    inputs:
-      source_repo:
-        description: 'Full URL of the source repo (e.g. https://github.com/org/source-repo.git)'
-        required: true
-        default: 'jnstockley/python-starter'
-      source_branch:
-        description: 'Branch to pull from (e.g. main)'
-        required: true
-        default: 'main'
-      target_branch:
-        description: 'Branch to create or update in this repo'
-        required: true
-        default: 'sync/external-update'
+  schedule:
+    - cron: "0 0 * * *" # optional: runs daily at midnight UTC
 
 permissions:
   contents: write
@@ -24,66 +13,39 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
-
+    environment: sync
     steps:
-      - name: Checkout destination repository
+      - name: Checkout target repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Important for merging
-
-      - name: Configure git
+          ref: 'dev'
+          token: ${{ secrets.GH_TOKEN }}
+          fetch-depth: 0
+  
+      - name: Fetch external repo and create sync branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Add and fetch source repository
-        run: |
-          git remote add source ${{ github.event.inputs.source_repo }}
-          git fetch source ${{ github.event.inputs.source_branch }}
-
-      - name: Create and attempt merge
-        id: merge
-        run: |
-          git checkout -B ${{ github.event.inputs.target_branch }}
-
-          # Try to merge, ignoring unrelated histories
-          set +e
-          git merge source/${{ github.event.inputs.source_branch }} --allow-unrelated-histories --no-commit
-          MERGE_STATUS=$?
-          set -e
-
-          # Check if there are any differences
-          if git diff --quiet; then
-            echo "No changes detected, skipping PR creation."
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          # If merge has conflicts, commit what we can
-          if [ $MERGE_STATUS -ne 0 ]; then
-            echo "⚠️ Merge conflicts detected."
-            git add .
-            git commit -m "Partial merge with conflicts from source repo (manual resolution required)" || true
+          git remote add external https://github.com/jnstockley/python-starter.git
+          git fetch external main
+          # Merge external main into current branch, overwriting conflicts
+          git merge -s ours --no-commit external/main || true
+          git checkout external/main -- .
+          git add .
+          # Commit if there are changes
+          if ! git diff --cached --quiet; then
+            git commit -m "Pull changes from python-starter"
           else
-            git commit -m "Merge from external repo: ${{ github.event.inputs.source_branch }}"
+            echo "No changes to commit"
           fi
 
-          echo "has_changes=true" >> $GITHUB_OUTPUT
-
-      - name: Push merge branch
-        if: steps.merge.outputs.has_changes == 'true'
-        run: |
-          git push origin HEAD:${{ github.event.inputs.target_branch }} --force
-
-      - name: Create Pull Request
-        if: steps.merge.outputs.has_changes == 'true'
-        uses: peter-evans/create-pull-request@v6
+      - name: Create Pull Request if differences exist
+        uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.event.inputs.target_branch }}
-          title: "Merge update from external repo: ${{ github.event.inputs.source_branch }}"
+          token: ${{ secrets.GH_TOKEN }}
+          base: dev
+          title: "Sync from python-starter"
           body: |
-            This pull request merges changes from **${{ github.event.inputs.source_repo }}**
-            branch **${{ github.event.inputs.source_branch }}**.
-
-            ⚠️ If there are merge conflicts, please resolve them manually in the GitHub UI.
+            This PR syncs changes from [jnstockley/python-starter](https://github.com/jnstockley/python-starter).
+          branch: sync
+          delete-branch: false

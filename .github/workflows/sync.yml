@@ -73,7 +73,13 @@ jobs:
 
       - name: Push merge branch
         if: steps.merge.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
+          # Reconfigure origin remote to use the PAT instead of GITHUB_TOKEN
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
+
+          # Now push with authentication as the PAT user
           git push origin HEAD:${{ github.event.inputs.target_branch }} --force
 
       - name: Create Pull Request

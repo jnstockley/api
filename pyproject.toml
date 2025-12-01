@@ -8,9 +8,9 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.13, <3.14"
 dependencies = [
-    "fastapi[standard]==0.122.0",
-    "psycopg==3.2.13",
-    "psycopg-binary==3.2.13",
+    "fastapi[standard]==0.123.0",
+    "psycopg==3.3.0",
+    "psycopg-binary==3.3.0",
     "sqlalchemy==2.0.44",
     "sqlmodel==0.0.27",
 ]

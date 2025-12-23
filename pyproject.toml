@@ -12,7 +12,7 @@ dependencies = [
     "psycopg==3.3.2",
     "psycopg-binary==3.3.2",
     "sqlalchemy==2.0.45",
-    "sqlmodel==0.0.28",
+    "sqlmodel==0.0.29",
 ]
 
 [dependency-groups]

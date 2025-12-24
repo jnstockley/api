@@ -7,6 +7,9 @@ ENV PYTHONUNBUFFERED=1
 ENV PATH="/app/.venv/bin:$PATH"
 ENV PYTHONPATH=/app/src/:$PYTHONPATH
 
+RUN apt-get update && \
+    apt-get install curl -yqq --no-install-recommends
+
 WORKDIR /app
 
 COPY --from=dhi.io/uv:0 /uv /uvx /bin/
@@ -28,6 +31,7 @@ ENV PYTHONPATH=/app/src/:$PYTHONPATH
 WORKDIR /app
 
 COPY . .
+COPY --from=build /bin/curl /usr/bin
 COPY --from=build /app/.venv .venv
 COPY --from=build /app/pyproject.toml .
 COPY --from=build /app/uv.lock .

@@ -19,19 +19,11 @@ RUN uv version ${VERSION} && \
 
 FROM dhi.io/python:3.13.11
 
-<<<<<<< HEAD
-RUN apt-get update && \
-    apt-get install curl -yqq --no-install-recommends  && \
-    adduser app
-
-USER app
-=======
 # Set up environment variables for production
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PATH="/app/.venv/bin:$PATH"
 ENV PYTHONPATH=/app/src/:$PYTHONPATH
->>>>>>> external/main
 
 WORKDIR /app
 
@@ -40,12 +32,4 @@ COPY --from=build /app/.venv .venv
 COPY --from=build /app/pyproject.toml .
 COPY --from=build /app/uv.lock .
 
-<<<<<<< HEAD
-# Set up environment variables for production
-ENV PATH="/app/.venv/bin:$PATH"
-ENV PYTHONPATH=/app/src/:$PYTHONPATH
-
 ENTRYPOINT ["fastapi", "run", "src/api.py", "--port", "5000", "--host", "0.0.0.0"]
-=======
-ENTRYPOINT ["python", "src/main.py"]
->>>>>>> external/main

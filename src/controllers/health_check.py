@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from sqlalchemy import text
+from sqlalchemy import select
 
 from database import db_dependency
 from util.logging import logger
@@ -11,7 +11,7 @@ router = APIRouter(prefix="/health-check")
 async def health_check(db: db_dependency):
     try:
         # Execute a simple query to check the database connection
-        db.execute(text("SELECT 1"))
+        db.exec(select(1))
         return {"status": "ok"}
     except Exception as e:
         logger.error(e)

@@ -1,12 +1,15 @@
+import sys
 import tomllib
 from contextlib import asynccontextmanager
 from pathlib import Path
 
+from dotenv import load_dotenv
 from fastapi import FastAPI
 
 import models
 from controllers import docker, health_check, ip
 from database import engine
+from util.healthcheck import healthcheck
 
 # Read version from pyproject.toml with simplified error handling
 try:

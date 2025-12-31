@@ -14,4 +14,3 @@ def healthcheck() -> bool:
     except Exception as e:
         logger.error(e)
         exit(1)
-

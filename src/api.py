@@ -40,3 +40,8 @@ app = FastAPI(
 app.include_router(health_check.router)
 app.include_router(docker.router)
 app.include_router(ip.router)
+
+if __name__ == "__main__":
+    load_dotenv()
+    if len(sys.argv) > 1 and sys.argv[1] == "healthcheck":
+        healthcheck()

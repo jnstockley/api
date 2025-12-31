@@ -16,9 +16,6 @@ dependencies = [
     "python-dotenv==1.2.1",
 ]
 license-files = ["LICENSE"]
-authors = [
-    { name = "Jack Stockley", email = "jack@jstockley.com"}
-]
 keywords = ["starter", "template", "python"]
 classifiers = [
     "Programming Language :: Python :: 3",

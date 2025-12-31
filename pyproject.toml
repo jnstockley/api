@@ -6,14 +6,24 @@ authors = [
     {name = "Jack Stockley", email = "jack@jstockley.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.13, <3.14"
+requires-python = ">=3.13, <4.0"
 dependencies = [
     "fastapi[standard]==0.127.0",
     "psycopg==3.3.2",
     "psycopg-binary==3.3.2",
     "sqlalchemy==2.0.45",
     "sqlmodel==0.0.29",
+    "python-dotenv==1.2.1",
 ]
+license-files = ["LICENSE"]
+keywords = ["starter", "template", "python"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+[project.urls]
+Homepage = "https://github.com/jnstockley/python-starter"
+Repository = "https://github.com/jnstockley/python-starter.git"
+Issues = "https://github.com/jnstockley/python-starter/issues"
 
 [dependency-groups]
 dev = [

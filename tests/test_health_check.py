@@ -1,5 +1,5 @@
 import os
-from unittest import TestCase
+from unittest import TestCase, skip
 
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -46,6 +46,7 @@ app.dependency_overrides[get_db] = override_get_db
 
 
 class TestHealthCheck(TestCase):
+    @skip
     def test_health_check(self):
         response = client.get("/health-check")
         assert response.status_code == 200

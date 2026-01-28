@@ -29,10 +29,13 @@ services:
         - action: rebuild
           path: uv.lock
         - action: sync+restart
-          path: compose-dev.yml
+          path: compose-dev.ymlx
           target: api
         - action: sync+restart
           path: .env
+          target: api
+        - action: rebuild
+          path: templates
           target: api
   db:
     image: postgres:18-alpine

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Valentine</title>
+    <style>
+      body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial; padding: 2rem; }
+      h1 { color: #c2185b; }
+    </style>
+    <script>
+      function increaseBtnSize() {
+        const yesBtn = document.querySelector(".yes");
+        if (!yesBtn) return;
+
+        // Read current font-size (px), fallback to 16 if parsing fails
+        const style = window.getComputedStyle(yesBtn);
+        const current = parseFloat(style.fontSize) || 16;
+
+        // Increase by 10%
+        const newSize = current * 2;
+        yesBtn.style.fontSize = newSize + "px";
+
+        // Optional: smooth visual effect
+        yesBtn.style.transition = "font-size 120ms ease";
+      }
+    </script>
+  </head>
+  <body>
+    <div style="text-align: center">
+      <h1>{{ message }}</h1>
+      <img src="https://wallpapers.com/images/hd/puss-in-boots-pleading-eyes-igkjctrjw2o2rfka.jpg" alt="puss and boots cat pleading eyes" style="aspect-ratio: auto" width="250em">
+      <p>Will you be my Valentines?</p>
+      <div class="buttons">
+        <button class="yes btn" onclick="alert('Yay! Happy Valentine\'s Day! ❤️\n LOVE YOU POOKES!')">Yes</button>
+        <button class="no btn" onclick="increaseBtnSize()">No</button>
+      </div>
+    </div>
+  </body>
+</html>

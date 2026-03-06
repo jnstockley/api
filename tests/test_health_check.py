@@ -1,6 +1,7 @@
 import os
 from unittest import TestCase, skip
 
+from src.api import app
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -8,15 +9,18 @@ from testcontainers.postgres import PostgresContainer
 
 import models
 from database import get_db
-from src.api import app
+
 
 postgres = PostgresContainer("postgres:17-alpine").start()
 
-client = TestClient(app)
-
-# Set up the in-memory SQLite database for testing
+# Set up the test database URL before importing the app
 DATABASE_URL = postgres.get_connection_url(driver="psycopg")
 os.environ["DATABASE_URL"] = DATABASE_URL
+
+
+client = TestClient(app)
+
+# Create the engine and tables
 engine = create_engine(DATABASE_URL)
 invalid_engine = create_engine(
     "postgresql+psycopg://postgres:postgres@postgres:5432/postgres2"

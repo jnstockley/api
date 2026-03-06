@@ -1,26 +1,28 @@
 import os
 from unittest import TestCase
 
+from database import engine, get_db
+from src.api import app
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from testcontainers.postgres import PostgresContainer
 
 import models
-from database import get_db
-from src.api import app
 
 postgres = PostgresContainer("postgres:17-alpine").start()
 
-client = TestClient(app)
-
-# Set up the in-memory SQLite database for testing
+# Set up the test database URL before importing anything else
 DATABASE_URL = postgres.get_connection_url(driver="psycopg")
 os.environ["DATABASE_URL"] = DATABASE_URL
-engine = create_engine(DATABASE_URL)
+
+# Now import the app and database module
+
+# Create tables
 models.Base.metadata.create_all(bind=engine)
 
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+client = TestClient(app)
 
 
 # Dependency to override the get_db dependency in the main app
@@ -45,7 +47,9 @@ class TestIp(TestCase):
         api_key = os.environ["API_KEY"]
         header = {"X-API-KEY": api_key}
         response = client.post(
-            "/ip/", params={"identifier": "test", "ip": "test"}, headers=header
+            "/ip/",
+            params={"identifier": "test", "ipv4_address": "test"},
+            headers=header,
         )
         assert response.status_code == 422
         assert response.json() == {"detail": "Invalid IP address format"}
@@ -57,16 +61,18 @@ class TestIp(TestCase):
         identifier = "test"
 
         response = client.post(
-            "/ip/", params={"identifier": identifier, "ip": ip}, headers=header
+            "/ip/",
+            params={"identifier": identifier, "ipv4_address": ip},
+            headers=header,
         )
 
         assert response.status_code == 200
         res_json: dict = response.json()
         assert "id" in res_json.keys()
-        assert "ip_address" in res_json.keys()
+        assert "ipv4_address" in res_json.keys()
         assert "updated_at" in res_json.keys()
         assert res_json["id"] == identifier
-        assert res_json["ip_address"] == ip
+        assert res_json["ipv4_address"] == ip
 
     def test_add_ip_with_header(self):
         api_key = os.environ["API_KEY"]
@@ -81,10 +87,10 @@ class TestIp(TestCase):
         assert response.status_code == 200
         res_json: dict = response.json()
         assert "id" in res_json.keys()
-        assert "ip_address" in res_json.keys()
+        assert "ipv4_address" in res_json.keys()
         assert "updated_at" in res_json.keys()
         assert res_json["id"] == identifier
-        assert res_json["ip_address"] == ip
+        assert res_json["ipv4_address"] == ip
 
     def test_get_all_ips(self):
         api_key = os.environ["API_KEY"]
@@ -96,10 +102,10 @@ class TestIp(TestCase):
         assert len(res_json) == 1
         res_json: dict = res_json[0]
         assert "id" in res_json.keys()
-        assert "ip_address" in res_json.keys()
+        assert "ipv4_address" in res_json.keys()
         assert "updated_at" in res_json.keys()
         assert res_json["id"] == "test"
-        assert res_json["ip_address"] == "1.1.1.1"
+        assert res_json["ipv4_address"] == "1.1.1.1"
 
     def test_get_ip_invalid_id(self):
         api_key = os.environ["API_KEY"]
@@ -115,7 +121,7 @@ class TestIp(TestCase):
         assert response.status_code == 200
         res_json: dict = response.json()
         assert "id" in res_json.keys()
-        assert "ip_address" in res_json.keys()
+        assert "ipv4_address" in res_json.keys()
         assert "updated_at" in res_json.keys()
         assert res_json["id"] == "test"
-        assert res_json["ip_address"] == "1.1.1.1"
+        assert res_json["ipv4_address"] == "1.1.1.1"

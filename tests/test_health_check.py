@@ -1,7 +1,6 @@
 import os
 from unittest import TestCase, skip
 
-from src.api import app
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -9,7 +8,7 @@ from testcontainers.postgres import PostgresContainer
 
 import models
 from database import get_db
-
+from src.api import app
 
 postgres = PostgresContainer("postgres:17-alpine").start()
 

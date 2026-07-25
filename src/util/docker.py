@@ -33,9 +33,8 @@ def get_latest_docker_image(image: str) -> str | None:
                 "digest" in docker_image
                 and "name" in docker_image
                 and docker_image["digest"] == digest
+                and docker_image["name"] != "latest"
+                and re.fullmatch(version_regex, docker_image["name"])
             ):
-                if docker_image["name"] != "latest" and re.fullmatch(
-                    version_regex, docker_image["name"]
-                ):
-                    return docker_image["name"]
+                return docker_image["name"]
     return None

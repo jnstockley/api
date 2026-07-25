@@ -1,13 +1,13 @@
 import os
 from unittest import TestCase
 
-from database import engine, get_db
-from src.api import app
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import sessionmaker
 from testcontainers.postgres import PostgresContainer
 
 import models
+from database import engine, get_db
+from src.api import app
 
 postgres = PostgresContainer("postgres:17-alpine").start()
 
@@ -68,9 +68,9 @@ class TestIp(TestCase):
 
         assert response.status_code == 200
         res_json: dict = response.json()
-        assert "id" in res_json.keys()
-        assert "ipv4_address" in res_json.keys()
-        assert "updated_at" in res_json.keys()
+        assert "id" in res_json
+        assert "ipv4_address" in res_json
+        assert "updated_at" in res_json
         assert res_json["id"] == identifier
         assert res_json["ipv4_address"] == ip
 
@@ -86,9 +86,9 @@ class TestIp(TestCase):
 
         assert response.status_code == 200
         res_json: dict = response.json()
-        assert "id" in res_json.keys()
-        assert "ipv4_address" in res_json.keys()
-        assert "updated_at" in res_json.keys()
+        assert "id" in res_json
+        assert "ipv4_address" in res_json
+        assert "updated_at" in res_json
         assert res_json["id"] == identifier
         assert res_json["ipv4_address"] == ip
 
@@ -101,9 +101,9 @@ class TestIp(TestCase):
         res_json: list[dict] = response.json()
         assert len(res_json) == 1
         res_json: dict = res_json[0]
-        assert "id" in res_json.keys()
-        assert "ipv4_address" in res_json.keys()
-        assert "updated_at" in res_json.keys()
+        assert "id" in res_json
+        assert "ipv4_address" in res_json
+        assert "updated_at" in res_json
         assert res_json["id"] == "test"
         assert res_json["ipv4_address"] == "1.1.1.1"
 
@@ -120,8 +120,8 @@ class TestIp(TestCase):
         response = client.get("/ip/test", headers=header)
         assert response.status_code == 200
         res_json: dict = response.json()
-        assert "id" in res_json.keys()
-        assert "ipv4_address" in res_json.keys()
-        assert "updated_at" in res_json.keys()
+        assert "id" in res_json
+        assert "ipv4_address" in res_json
+        assert "updated_at" in res_json
         assert res_json["id"] == "test"
         assert res_json["ipv4_address"] == "1.1.1.1"

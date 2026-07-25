@@ -1,6 +1,5 @@
 import datetime
 import re
-from typing import Optional
 
 from fastapi import APIRouter, HTTPException, Request, Security
 from sqlalchemy import select
@@ -35,8 +34,8 @@ ipv6_pattern = re.compile(
 async def add_ip(
     identifier: str,
     request: Request,
-    ipv4_address: Optional[str] = None,
-    ipv6_address: Optional[str] = None,
+    ipv4_address: str | None = None,
+    ipv6_address: str | None = None,
 ):
     if identifier.strip() == "":
         raise HTTPException(
@@ -74,24 +73,23 @@ async def get_ip(identifier: str):
         return row
 
 
-def __update_ip(
-    identifier: str, ipv4_address: Optional[str], ipv6_address: Optional[str]
-):
+def __update_ip(identifier: str, ipv4_address: str | None, ipv6_address: str | None):
     with Session(engine) as s:
         stmt = select(IpAddress).where(IpAddress.id == identifier)
         row: IpAddress = s.execute(stmt).scalar_one_or_none()
+        tz_info = datetime.datetime.now(datetime.UTC).astimezone().tzinfo
         if row is None:
             row = IpAddress(
                 id=identifier,
                 ipv4_address=ipv4_address,
                 ipv6_address=ipv6_address,
-                updated_at=datetime.datetime.now(),
+                updated_at=datetime.datetime.now(tz=tz_info),
             )
             s.add(row)
         else:
             row.ipv4_address = ipv4_address
             row.ipv6_address = ipv6_address
-            row.updated_at = datetime.datetime.now()
+            row.updated_at = datetime.datetime.now(tz=tz_info)
         s.flush()
         s.commit()
         s.refresh(row)

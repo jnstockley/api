@@ -13,6 +13,6 @@ async def health_check(db: db_dependency):
         # Execute a simple query to check the database connection
         db.exec(select(1))
         return {"status": "ok"}
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error(e)
         raise HTTPException(status_code=500, detail="Database connection failed")

@@ -16,7 +16,7 @@ try:
     pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
     with open(pyproject_path, "rb") as f:
         version = tomllib.load(f)["project"]["version"]
-except Exception:
+except Exception:  # noqa: BLE001
     version = "0.1.0"
 
 

@@ -1,3 +1,5 @@
+import sys
+
 from sqlalchemy import select
 
 from database import get_db
@@ -10,7 +12,7 @@ def healthcheck() -> bool:
         db = next(get_db())
         # Execute a simple query to check the database connection
         db.exec(select(1))
-        exit(0)
-    except Exception as e:
+        sys.exit(0)
+    except Exception as e:  # noqa: BLE001
         logger.error(e)
-        exit(1)
+        sys.exit(1)

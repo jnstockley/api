@@ -17,7 +17,7 @@ dependencies = [
     "sqlalchemy==2.0.52",
     "sqlmodel==0.0.39",
     "python-dotenv==1.2.3",
-    "psycopg[binary]>=3.3.3",
+    "psycopg[binary]==3.3.3",
 ]
 [project.urls]
 Homepage = "https://github.com/jnstockley/python-starter"

@@ -11,7 +11,7 @@ dependencies = [
     "fastapi[standard]==0.141.1",
     "sqlalchemy==2.0.52",
     "sqlmodel==0.0.39",
-    "python-dotenv==1.2.2",
+    "python-dotenv==1.2.3",
     "psycopg[binary]>=3.3.3",
 ]
 license-files = ["LICENSE"]

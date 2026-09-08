@@ -9,6 +9,12 @@ Simplest setup is to start from [compose.yml](https://github.com/jnstockley/api/
 - `DATABASE_URL` - The URL to connect to postgres DB. Must start with `postgresql+psycopg://`. Should be in the format specifiec in [template.env](https://github.com/jnstockley/api/blob/dev/template.env)
 - `TZ` - Timezone of the container
 - `PGTZ` - Timezone the Postgres container should use
+- `NEXTCLOUD_URL` - Base URL (must be `https://`) of the Nextcloud instance used by `/webhook/nextcloud-talk`
+- `NEXTCLOUD_TALK_TOKEN` - Conversation token of the registered [Nextcloud Talk bot](https://nextcloud-talk.readthedocs.io/en/latest/bot-list/) used by `/webhook/nextcloud-talk`
+- `NEXTCLOUD_TALK_SECRET` - Shared secret of the registered Nextcloud Talk bot used by `/webhook/nextcloud-talk`
+
+## Webhooks
+- `POST /webhook/nextcloud-talk` - Forwards a `header` and `message` to a Nextcloud Talk conversation via the [Nextcloud Talk Bot API](https://nextcloud-talk.readthedocs.io/en/latest/bot-list/), using the [nctalk](https://pypi.org/project/nctalk/) package. Requires the `X-API-KEY` header and a JSON body: `{"header": "...", "message": "..."}`
 
 ## How to Access
 Using the [compose.yml](https://github.com/jnstockley/api/blob/dev/compose.yml) file, you can access the API at `http://<IP>:5000/health-check`. If everything is setup correctly, you should see `{"status":"ok"}`

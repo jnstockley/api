@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 
 import models
-from controllers import docker, health_check, ip, valentines_day
+from controllers import docker, health_check, ip, valentines_day, webhook
 from database import engine
 from util.healthcheck import healthcheck
 
@@ -44,6 +44,7 @@ app.include_router(health_check.router)
 app.include_router(docker.router)
 app.include_router(ip.router)
 app.include_router(valentines_day.router)
+app.include_router(webhook.router)
 
 if __name__ == "__main__":
     load_dotenv()

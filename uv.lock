@@ -571,7 +571,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", extras = ["standard"], specifier = "==0.141.1" },
-    { name = "nctalk", specifier = ">=0.0.4" },
+    { name = "nctalk", specifier = "==0.0.4" },
     { name = "psycopg", extras = ["binary"], specifier = "==3.3.5" },
     { name = "python-dotenv", specifier = "==1.2.3" },
     { name = "sqlalchemy", specifier = "==2.0.52" },

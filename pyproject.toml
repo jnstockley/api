@@ -17,7 +17,7 @@ dependencies = [
     "sqlalchemy==2.0.54",
     "sqlmodel==0.0.42",
     "python-dotenv==1.2.3",
-    "psycopg[binary]==3.3.5",
+    "psycopg[binary]==3.3.6",
     "nctalk==0.0.4",
 ]
 [project.urls]

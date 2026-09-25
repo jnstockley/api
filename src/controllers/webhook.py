@@ -122,6 +122,7 @@ def parse_facts(facts_text: str) -> list[dict]:
             label, _, value = line.partition(":")
             facts.append({"label": label.strip(), "value": value.strip()})
         else:
-            facts.append({"label": "", "value": line})  # no colon: show it anyway, don't drop it
+            facts.append(
+                {"label": "", "value": line}
+            )  # no colon: show it anyway, don't drop it
     return facts
-

@@ -100,10 +100,29 @@ async def pve_ups(webhook: PveUpsWebhook):
             context={
                 "body": webhook.body,
                 "subject": webhook.subject,
-                "facts": webhook.facts,
+                "facts": parse_facts(webhook.facts),
                 "timestamp": webhook.timestamp,
                 "severity": webhook.severity,
                 "severity_upper": webhook.severity.upper(),
                 "version": webhook.version,
             },
         )
+
+    return {"status": "sent"}
+
+
+def parse_facts(facts_text: str) -> list[dict]:
+    """Turn PVE-UPS's rendered 'facts' string into {label, value} rows."""
+    facts = []
+    for line in facts_text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        if ":" in line:
+            label, _, value = line.partition(":")
+            facts.append({"label": label.strip(), "value": value.strip()})
+        else:
+            facts.append(
+                {"label": "", "value": line}
+            )  # no colon: show it anyway, don't drop it
+    return facts

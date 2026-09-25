@@ -96,7 +96,7 @@ async def pve_ups(webhook: PveUpsWebhook):
             sender_addr="PVE UPS <no-reply@jstockley.com>",
             template="pve_ups_email.html",
             subject=webhook.subject,
-            to=webhook.to,
+            to=[webhook.to],
             context={
                 "body": webhook.body,
                 "subject": webhook.subject,

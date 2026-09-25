@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="supported-color-schemes" content="light dark" />
+  <title>{{ subject }}</title>
+  <style>
+    body { margin: 0; padding: 0; }
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px; height: 1px;
+      margin: -1px; padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .email-container { width: 100%; max-width: 560px; }
+    @media only screen and (max-width: 600px) {
+      .email-container { width: 100% !important; }
+      .email-padding { padding-left: 16px !important; padding-right: 16px !important; }
+    }
+    @media (prefers-color-scheme: dark) {
+      .email-bg { background: #18181b !important; }
+      .email-card { background: #27272a !important; border-color: #3f3f46 !important; }
+      .email-body-text { color: #e4e4e7 !important; }
+      .email-secondary-text { color: #a1a1aa !important; }
+      .email-fact-border { border-color: #3f3f46 !important; }
+    }
+  </style>
+</head>
+<body class="email-bg" style="background:#f4f4f5; font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; color:#1f2328;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="email-bg" style="background:#f4f4f5; padding:24px 0;">
+    <tr>
+      <td align="center">
+        <table role="presentation" cellpadding="0" cellspacing="0" class="email-container email-card" style="background:#ffffff; border-radius:8px; overflow:hidden; border:1px solid #e5e7eb;">
+          <tr>
+            <td style="background:{{ '#b91c1c' if severity == 'critical' else ('#b45309' if severity == 'warning' else '#1d4ed8') }}; padding:16px 24px;">
+              <p style="margin:0; color:#ffffff; font-weight:700; font-size:12px; letter-spacing:0.05em; text-transform:uppercase;">
+                {{ severity_upper }} &middot; PVE-UPS
+              </p>
+              <h1 style="margin:4px 0 0; color:#ffffff; font-size:18px; line-height:1.4; font-weight:600;">
+                {{ subject }}
+              </h1>
+            </td>
+          </tr>
+          <tr>
+            <td class="email-padding" style="padding:24px;">
+              <p class="email-body-text" style="margin:0 0 20px; font-size:15px; line-height:1.6; color:#1f2328;">{{ body }}</p>
+
+              {% if facts %}
+              <h2 class="visually-hidden">Event details</h2>
+              <table role="table" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; margin-bottom:16px;">
+                <caption class="visually-hidden">Details for this event</caption>
+                <tbody>
+                  {% for fact in facts %}
+                  <tr>
+                    <th scope="row" class="email-fact-border email-secondary-text" style="text-align:left; font-weight:400; padding:6px 12px 6px 0; border-bottom:1px solid #e5e7eb; font-size:14px; color:#4b5563; width:45%; vertical-align:top;">{{ fact.label }}</th>
+                    <td class="email-fact-border email-body-text" style="padding:6px 0; border-bottom:1px solid #e5e7eb; font-size:14px; color:#1f2328; font-weight:600;">{{ fact.value }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% endif %}
+
+              <p class="email-secondary-text" style="margin:0; font-size:13px; line-height:1.5; color:#4b5563;">
+                <span class="visually-hidden">Sent </span>{{ timestamp }} &middot; PVE-UPS {{ version }}
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

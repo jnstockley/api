@@ -1,7 +1,14 @@
 [project]
 name = "js-api"
 version = "0.1.0"
+<<<<<<< HEAD
 description = "Custom API written in Python using FastAPI"
+=======
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14, <3.15"
+license-files = ["LICENSE"]
+>>>>>>> external/main
 authors = [
     {name = "Jack Stockley", email = "jack@jstockley.com"}
 ]

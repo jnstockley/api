@@ -2,18 +2,18 @@
 name = "js-api"
 version = "0.1.0"
 description = "Custom API written in Python using FastAPI"
+readme = "README.md"
+requires-python = ">=3.14, <3.15"
+license-files = ["LICENSE"]
 authors = [
     {name = "Jack Stockley", email = "jack@jstockley.com"}
 ]
-readme = "README.md"
-requires-python = ">=3.14, <4.0"
-license-files = ["LICENSE"]
 keywords = ["starter", "template", "python"]
 classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
-    "fastapi[standard]==0.143.0",
+    "fastapi[standard]==0.143.1",
     "sqlalchemy==2.1.4",
     "sqlmodel==0.0.48",
     "python-dotenv==1.2.4",

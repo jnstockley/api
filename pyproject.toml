@@ -15,7 +15,7 @@ classifiers = [
 dependencies = [
     "fastapi[standard]==0.162.5",
     "sqlalchemy==2.1.8",
-    "sqlmodel==0.0.49",
+    "sqlmodel==0.0.50",
     "python-dotenv==1.2.4",
     "psycopg[binary]==3.3.9",
     "nctalk==0.0.4",

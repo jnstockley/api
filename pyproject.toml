@@ -13,7 +13,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
-    "fastapi[standard]==0.162.5",
+    "fastapi[standard]==0.163.0",
     "sqlalchemy==2.1.8",
     "sqlmodel==0.0.49",
     "python-dotenv==1.2.4",

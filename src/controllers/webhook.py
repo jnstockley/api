@@ -16,6 +16,11 @@ class NextcloudTalkWebhook(BaseModel):
     message: str = Field(..., min_length=1, max_length=32000)
 
 
+class BeszelWebhook(BaseModel):
+    title: str = Field(..., min_length=1, max_length=200)
+    message: str = Field(..., min_length=1, max_length=32000)
+
+
 class PveUpsWebhook(BaseModel):
     subject: str = Field(..., min_length=1, max_length=200)
     body: str = Field(..., min_length=1, max_length=32000)
@@ -49,6 +54,34 @@ async def databasus(webhook: NextcloudTalkWebhook):
 
     if not messenger.send(message):
         logger.error("Failed to send message to Nextcloud Talk")
+        raise HTTPException(
+            status_code=502, detail="Failed to send message to Nextcloud Talk"
+        )
+
+    return {"status": "sent"}
+
+
+@router.post("/beszel")
+async def beszel(webhook: BeszelWebhook):
+    if webhook.title.strip() == "":
+        raise HTTPException(status_code=422, detail="title cannot be empty")
+    if webhook.message.strip() == "":
+        raise HTTPException(status_code=422, detail="message cannot be empty")
+
+    endpoint_url = os.environ.get("NEXTCLOUD_URL", "").strip()
+    token = os.environ.get("BESZEL_NEXTCLOUD_TALK_TOKEN", "").strip()
+    secret = os.environ.get("BESZEL_NEXTCLOUD_TALK_SECRET", "").strip()
+
+    if not endpoint_url or not token or not secret:
+        raise HTTPException(status_code=500, detail="Nextcloud Talk is not configured")
+    if not endpoint_url.startswith("https://"):
+        raise HTTPException(status_code=500, detail="NEXTCLOUD_URL must use https://")
+
+    messenger = TalkMessenger(endpoint_url=endpoint_url, token=token, secret=secret)
+    message = f"**{webhook.title}**\n{webhook.message}"
+
+    if not messenger.send(message):
+        logger.error("Failed to send Beszel message to Nextcloud Talk")
         raise HTTPException(
             status_code=502, detail="Failed to send message to Nextcloud Talk"
         )

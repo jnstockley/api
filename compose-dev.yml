@@ -38,7 +38,7 @@ services:
           path: templates
           target: api
   db:
-    image: postgres:18-alpine
+    image: postgres:19-alpine
     container_name: postgres_dev
     volumes:
       - ./postgres:/var/lib/postgresql/18/docker
